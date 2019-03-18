@@ -1,0 +1,1 @@
+/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/ConsoleGame.dir/main.cpp.o CMakeFiles/ConsoleGame.dir/Creature.cpp.o  -o ConsoleGame libModule.a -lcurses 
