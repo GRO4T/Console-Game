@@ -2,11 +2,9 @@
 #define GAME_H
 
 #if !defined(NDEBUG)
-#pragma message ("DEBUG MODE")
-#define DEBUG 1
+    #define DEBUG 1
 #else
-#pragma message ("RELEASE MODE")
-#define DEBUG 0
+    #define DEBUG 0
 #endif
 
 #include<chrono>

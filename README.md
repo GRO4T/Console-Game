@@ -1,8 +1,7 @@
 How to create Debug and Release mode in cmake
----------------------------------------------
----------------------------------------------
+=
     create directiories "Debug" and "Release"
-    -----------------------------------------
+-
     
     in each of directory run:
         -in Debug
