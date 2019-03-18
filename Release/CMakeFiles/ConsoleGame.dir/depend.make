@@ -4,6 +4,10 @@
 CMakeFiles/ConsoleGame.dir/Creature.cpp.o: ../Creature.cpp
 CMakeFiles/ConsoleGame.dir/Creature.cpp.o: ../Creature.hpp
 
+CMakeFiles/ConsoleGame.dir/game.cpp.o: ../Creature.hpp
+CMakeFiles/ConsoleGame.dir/game.cpp.o: ../game.cpp
+CMakeFiles/ConsoleGame.dir/game.cpp.o: ../game.hpp
+
 CMakeFiles/ConsoleGame.dir/main.cpp.o: ../Creature.hpp
 CMakeFiles/ConsoleGame.dir/main.cpp.o: ../game.hpp
 CMakeFiles/ConsoleGame.dir/main.cpp.o: ../main.cpp

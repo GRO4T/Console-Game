@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/damian/Desktop/ConsoleGame/Creature.cpp" "/home/damian/Desktop/ConsoleGame/Release/CMakeFiles/ConsoleGame.dir/Creature.cpp.o"
+  "/home/damian/Desktop/ConsoleGame/game.cpp" "/home/damian/Desktop/ConsoleGame/Release/CMakeFiles/ConsoleGame.dir/game.cpp.o"
   "/home/damian/Desktop/ConsoleGame/main.cpp" "/home/damian/Desktop/ConsoleGame/Release/CMakeFiles/ConsoleGame.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

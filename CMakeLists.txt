@@ -8,13 +8,15 @@ project(ConsoleGame)
 ADD_LIBRARY(Module
     main.cpp
     Creature.cpp
+    game.cpp
     )
 target_link_libraries(Module -lcurses)
 
 add_executable(
     ConsoleGame
     main.cpp
-    Creature.cpp 
+    Creature.cpp
+    game.cpp
     )
 
 target_link_libraries(ConsoleGame Module)

@@ -166,6 +166,36 @@ Creature.cpp.s:
 	$(MAKE) -f CMakeFiles/ConsoleGame.dir/build.make CMakeFiles/ConsoleGame.dir/Creature.cpp.s
 .PHONY : Creature.cpp.s
 
+game.o: game.cpp.o
+
+.PHONY : game.o
+
+# target to build an object file
+game.cpp.o:
+	$(MAKE) -f CMakeFiles/Module.dir/build.make CMakeFiles/Module.dir/game.cpp.o
+	$(MAKE) -f CMakeFiles/ConsoleGame.dir/build.make CMakeFiles/ConsoleGame.dir/game.cpp.o
+.PHONY : game.cpp.o
+
+game.i: game.cpp.i
+
+.PHONY : game.i
+
+# target to preprocess a source file
+game.cpp.i:
+	$(MAKE) -f CMakeFiles/Module.dir/build.make CMakeFiles/Module.dir/game.cpp.i
+	$(MAKE) -f CMakeFiles/ConsoleGame.dir/build.make CMakeFiles/ConsoleGame.dir/game.cpp.i
+.PHONY : game.cpp.i
+
+game.s: game.cpp.s
+
+.PHONY : game.s
+
+# target to generate assembly for a file
+game.cpp.s:
+	$(MAKE) -f CMakeFiles/Module.dir/build.make CMakeFiles/Module.dir/game.cpp.s
+	$(MAKE) -f CMakeFiles/ConsoleGame.dir/build.make CMakeFiles/ConsoleGame.dir/game.cpp.s
+.PHONY : game.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -209,6 +239,9 @@ help:
 	@echo "... Creature.o"
 	@echo "... Creature.i"
 	@echo "... Creature.s"
+	@echo "... game.o"
+	@echo "... game.i"
+	@echo "... game.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

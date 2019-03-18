@@ -2,9 +2,9 @@
 #define GAME_H
 
 #if !defined(NDEBUG)
-    #define DEBUG 1
+#define DEBUG 1
 #else
-    #define DEBUG 0
+#define DEBUG 0
 #endif
 
 #include<chrono>
@@ -26,7 +26,7 @@ struct Key{
 };
 
 //in Windows we have 'kbhit()' which does almost exactly the same
-int KeyBoardHit(struct timeval tv){
+inline int KeyBoardHit(struct timeval tv){
     fd_set rfds;
 
     FD_ZERO(&rfds);
@@ -41,129 +41,59 @@ class Game{
     public:
         // static std::chrono::time_point<std::chrono::system_clock> tp1;
         //static std::chrono::time_point<std::chrono::system_clock> tp2;
+        virtual void ProcessInput() = 0;
+        virtual void Update() = 0;
+        virtual void Draw() = 0;
+
+        virtual void DisplayUI() = 0;
+
+        virtual void GameLoop() = 0;
+
+        Game(){ PAUSE = false; EXIT = false; }
+
+    protected:
         std::chrono::duration<float> elapsedTime;
         float fElapsedTime;
+        bool PAUSE;
         bool EXIT;
-
-        virtual void ProcessInput(){}
-        virtual void Update(){}
-        virtual void Draw(){}
-
-        virtual void GameLoop(){}
-
-        Game(){ EXIT = false; }
-
-
-
 };
 
 class SinglePlayer : Game{
 
 };
 
-void HandlePlayer(Player &player, Key * keys, int n, Player &opponent){
-    int vx, vy;
-    vx = vy = 0;
-    int vSpeed = 2;
-    int jumpForce = 3;
+void HandlePlayer(Player &player, Key * keys, int n, Player &opponent);
 
-    bool BREAK = false;
-    for (int i = 0; i < KEY_NUM && !BREAK; ++i){
-        if (keys[i].pressed){
-            switch(i){
-                case 0:
-                    if (player.onGround)
-                        player.isAttacking = true;
-                    BREAK = true; break;
-                case 1:
-                    vy += -jumpForce;
-                    BREAK = true; break;
-                case 2:
-                    vx += -vSpeed;
-                    player.faceRight = false;
-                    BREAK = true; break;
-                case 3:
-                    vx += vSpeed;
-                    player.faceRight = true;
-                    BREAK = true; break;
-            }
-        }
-    }
-
-    if (!(player.isAttacking)){
-        player.Update(vx, vy);
-    }
-    else{
-        if (IS_CURR_ANIM_ATTACK_ANIM){
-            //if attack animation is at its final stage (to avoid hitting with a sword at the beginning of the movement)
-            if (player.currentClip->state == player.currentClip->len - 1){
-                player.Attack(opponent);
-            }
-        }
-    }
-}
-
-class Multiplayer : Game{
+class Multiplayer : public Game{
     public:
+        Multiplayer() : Game() {
+            player1.Set(0, 0, 0, 0, 3, 3, playerAnimations);
+            player2.Set(76, 0, 0, 0, 3, 3, playerAnimations);
+        }
+
+        void GameLoop();
+
+    private:
         Player player1;
         Player player2;
 
         Key keys1[KEY_NUM] = { {KEY_DOWN, 0}, {KEY_UP, 0}, {KEY_LEFT, 0}, {KEY_RIGHT, 0} }; //ARROWS
-        Key keys2[KEY_NUM] = { {115, 0}, {'w', 0}, {'a', 0}, {'d', 0} }; //WSAD
+        Key keys2[KEY_NUM] = { {'s', 0}, {'w', 0}, {'a', 0}, {'d', 0} }; //WSAD
 
-        Multiplayer() : Game() {
-            player1.Set(0, 16, 0, 0, 3, 3, playerAnimations);
-            player2.Set(40, 16, 0, 0, 3, 3, playerAnimations);
+        void ProcessInput();
+        void Update(){
+            HandlePlayer(player1, keys1, KEY_NUM, player2);
+            HandlePlayer(player2, keys2, KEY_NUM, player1);
         }
-        void ProcessInput(){
-            int n = KEY_NUM;
-            int c;
-            for (int i = 0; i < n; ++i){
-                keys1[i].pressed = false;
-                keys2[i].pressed = false;
-            }
+        void DisplayUI(){
+            string health_bar2 = "health = " + to_string(player2.health >= 0 ? player2.health : 0);
+            wattron(win, A_REVERSE);
+            mvwprintw(win, 1, 1, "Player1");
+            mvwprintw(win, 1, BOUND_RIGHT - 7, "Player2");
+            wattroff(win, A_REVERSE);
+            mvwprintw(win, 2, BOUND_RIGHT - health_bar2.length(), health_bar2.c_str());
+            mvwprintw(win, 2, 1, "health = %d", player1.health >= 0 ? player1.health : 0);
 
-            struct timeval tv;
-            tv.tv_sec = 0;
-            tv.tv_usec = 1;
-            int x = 0; //we must limit keys that can be written
-            while (KeyBoardHit(tv)) {
-                c = wgetch(win);
-                if (x++ < n){
-                    for (int i = 0; i < n; ++i){
-                        if (c == keys1[i].value)
-                            keys1[i].pressed = true;
-                        else if (c == keys2[i].value)
-                            keys2[i].pressed = true;
-                        else if (c == 'q')
-                            EXIT = true;
-                    }
-                }
-            }
-        }
-        void GameLoop(){
-            auto tp1 = std::chrono::system_clock::now();
-            auto tp2 = tp1;
-            while(1){
-                tp1 = std::chrono::system_clock::now();
-                ProcessInput();
-                Update();
-                Draw();
-
-                tp2 = std::chrono::system_clock::now(); elapsedTime = tp2 - tp1; tp1 = tp2;
-                fElapsedTime = elapsedTime.count();
-                this_thread::sleep_for(66.8ms - elapsedTime);
-
-                if (DEBUG){
-
-                    mvwprintw(win, 1,1,"%d %d onGround = %d attack = %d", player1.x, player1.y, player1.onGround, player1.isAttacking);
-                    mvwprintw(win, 5, 3, "%d %d %d", player1.vx, player1.vy, 'g');
-                }
-
-                if (EXIT)
-                    break;
-                wrefresh(win);
-            }
         }
         void Draw(){
             wclear(win);
@@ -172,18 +102,15 @@ class Multiplayer : Game{
             for (auto r : map){
                 mvwprintw(win, 1 + i++, 1, "%s", r.c_str());
             }
-            player1.Draw();
-            player2.Draw();
-            mvwprintw(win, 3, 3, "%d %d %d %d", keys1[0].pressed, keys1[1].pressed, keys1[2].pressed, keys1[3].pressed);
-            mvwprintw(win, 4, 3, "%d %d %d %d", keys2[0].value, keys2[1].value, keys2[2].pressed, keys2[3].pressed);
+            if (player2.isDead){
+                player2.Draw();
+                player1.Draw();
+            }
+            else{
+                player1.Draw();
+                player2.Draw();
+            }
+            DisplayUI();
         }
-
-        void Update(){
-            HandlePlayer(player1, keys1, KEY_NUM, player2);
-            HandlePlayer(player2, keys2, KEY_NUM, player1);
-        }
-    private:
-
-
 };
 #endif

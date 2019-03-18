@@ -5,11 +5,11 @@
 #include<fstream>
 #include<string.h>
 
-#define KEY_NUM 4
-#define KEY_OFFSET 258
-
 #define WINX 0
 #define WINY 0
+
+#define FILENAME "assets.txt"
+
 
 //some defines for if-statements
 
@@ -18,6 +18,7 @@ using namespace std;
 //Assets
 vector<vector<Clip>> playerAnimations;
 
+vector<vector<string>> maps;
 vector<string> map;
 
 void GetAssets(string filename); //gets assets and initializes characters
@@ -33,17 +34,25 @@ int main(){
     win = newwin(BOUND_UP + 2, BOUND_RIGHT + 2, WINX, WINY); //+2 is for the box
     keypad(win, TRUE); //enable special characters
 
-    GetAssets("assets2.txt");
+    GetAssets(FILENAME);
 
-    int choice = Menu();
+    int choice;
+    do{
+        vector<string> choices = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT" };
+        choice = Menu(choices, 3);
+        if (choice == 1){
 
-    if (choice == 1){
+        }
+        else if (choice == 2){
+            vector<string> choices = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
+            int c = Menu(choices, 4);
+            int mapN = c == 0 ? 3 : c - 1;
+            map = maps[mapN];
+            Multiplayer game;
+            game.GameLoop();
+        }
 
-    }
-    else if (choice == 2){
-        Multiplayer game;
-        game.GameLoop();
-    }
+    } while (choice); //menu returns 0 when exit is chosen
 
     endwin();
 }
@@ -57,7 +66,7 @@ void GetAssets(string filename){
         getline(file, row);
         if (row != "EOF"){
             if (row == "Player"){
-                for (int i = 0; i < 4; ++i){
+                for (int i = 0; i < ANIM_NUM; ++i){
                     vector<Clip> anim;
                     while(1) {
                         getline(file, row);
@@ -91,6 +100,7 @@ void GetAssets(string filename){
                 }
             }
             else if (row == "Map"){
+                vector<string> map;
                 while(1){
                     getline(file, row);
                     if (row == "EOM")
@@ -98,6 +108,7 @@ void GetAssets(string filename){
                     else
                         map.emplace_back(row);
                 }
+                maps.emplace_back(map);
             }
         }
 

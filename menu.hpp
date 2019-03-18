@@ -5,10 +5,9 @@
 
 extern WINDOW * win;
 
-vector<string> choices = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT" };
 int n_choices = 3;
 
-void PrintMenu(WINDOW * menu_win, int highlight){
+void PrintMenu(WINDOW * menu_win, int highlight, vector<string> choices, int n_choices){
 
     int x, y, i;
 
@@ -29,12 +28,13 @@ void PrintMenu(WINDOW * menu_win, int highlight){
     }
     wrefresh(menu_win);
 }
-int Menu(){
+int Menu(vector<string> choices, int n_choices){
     int highlight = 1;
     int choice = 0;
     int c;
-
-    PrintMenu(win, highlight);
+    
+    wclear(win);
+    PrintMenu(win, highlight, choices, n_choices);
 
     while(1){
         c = wgetch(win);
@@ -57,13 +57,13 @@ int Menu(){
                 break;
         }
 
-        PrintMenu(win, highlight);
+        PrintMenu(win, highlight, choices, n_choices);
 
         if (choice != 0) //user did a choice
             break;
     }
 
-    if (choice == 3)
+    if (choice == n_choices)
         return 0;
     return choice;
 }

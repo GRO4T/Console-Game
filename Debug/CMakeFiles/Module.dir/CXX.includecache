@@ -21,6 +21,12 @@ iostream
 -
 math.h
 -
+cassert
+-
+
+/home/damian/Desktop/ConsoleGame/game.cpp
+game.hpp
+/home/damian/Desktop/ConsoleGame/game.hpp
 
 /home/damian/Desktop/ConsoleGame/game.hpp
 chrono

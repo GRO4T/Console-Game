@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ConsoleGame.dir/main.cpp.o"
   "CMakeFiles/ConsoleGame.dir/Creature.cpp.o"
+  "CMakeFiles/ConsoleGame.dir/game.cpp.o"
   "ConsoleGame.pdb"
   "ConsoleGame"
 )
