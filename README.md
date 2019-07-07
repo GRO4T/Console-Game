@@ -2,9 +2,9 @@
 
 ## create directiories "Debug" and "Release"
 in each of directory run:
-### -in Debug
+### in Debug/
     cmake -DCMAKE_BUILD_TYPE=Debug ..
-### -in Release
+### in Release/
     cmake -DCMAKE_BUILD_TYPE=Release ..
 ### or run interactive cmake
     ccmake ..
