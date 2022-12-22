@@ -1,2 +1,0 @@
-/usr/bin/ar qc libModule.a  CMakeFiles/Module.dir/main.cpp.o CMakeFiles/Module.dir/Creature.cpp.o CMakeFiles/Module.dir/game.cpp.o
-/usr/bin/ranlib libModule.a

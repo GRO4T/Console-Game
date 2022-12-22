@@ -1,12 +1,27 @@
-# Project overview
+# ASCII Combat
+## Project overview
+Terminal fighting game written in C++ using ncurses library for graphics.
+Characters are modeled and animated using developed ASCII art.
 The project is a simple combat game.
 For graphics I used ncurses library and developed ASCII art characters.
 The game implements simple UI.
 For the purpose of loading assets I developed simple markup language.
 
-# Markup language
-Language is specific to the implementation and can be hard to reuse in further projects.
-## How it works
+![](docs/game_view.png)
+
+## Building the project
+```
+mkdir build
+cd build
+cmake ..
+make
+```
+This should result in a binary named ConsoleGame.
+It is important that asset files are in the same directory as the binary.
+
+## Markup language
+For the purpose of loading assets simple markup language was implemented.
+### How it works
 First it looks for name tag (f.e. Map, Player).
 Then if it's Map, algorithms is as follows:
 * read lines of map until EOM markup
@@ -19,15 +34,3 @@ For Player: (read animations)
 * read animations until END markup
 
 Parsing finishes when EOF is found
-
-# CMake
-## How to create Debug and Release mode in cmake
-
-### create directiories "Debug" and "Release"
-in each of directory run:
-#### in Debug/
-    cmake -DCMAKE_BUILD_TYPE=Debug ..
-#### in Release/
-    cmake -DCMAKE_BUILD_TYPE=Release ..
-#### or run interactive cmake
-    ccmake ..

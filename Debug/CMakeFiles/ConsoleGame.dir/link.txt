@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++14 -g  -rdynamic CMakeFiles/ConsoleGame.dir/main.cpp.o CMakeFiles/ConsoleGame.dir/Creature.cpp.o CMakeFiles/ConsoleGame.dir/game.cpp.o  -o ConsoleGame libModule.a -lcurses 

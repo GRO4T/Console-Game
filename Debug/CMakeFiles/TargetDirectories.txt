@@ -1,4 +1,0 @@
-/home/damian/Desktop/ConsoleGame/Debug/CMakeFiles/rebuild_cache.dir
-/home/damian/Desktop/ConsoleGame/Debug/CMakeFiles/edit_cache.dir
-/home/damian/Desktop/ConsoleGame/Debug/CMakeFiles/Module.dir
-/home/damian/Desktop/ConsoleGame/Debug/CMakeFiles/ConsoleGame.dir
