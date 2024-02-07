@@ -8,7 +8,7 @@
 #endif
 
 #include<chrono>
-#include"Creature.hpp"
+#include"creature.h"
 #include<thread>
 
 #define KEY_NUM 4

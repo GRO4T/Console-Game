@@ -1,0 +1,22 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_library(
+    name = "ascii-combat-lib",
+    srcs = [
+        "src/creature.cc",
+        "src/game.cc",
+    ],
+    hdrs = [
+        "include/creature.h",
+        "include/game.h",
+        "include/menu.h",
+    ],
+    strip_include_prefix = "include",
+)
+
+cc_binary(
+    name = "ascii-combat",
+    srcs = ["src/main.cc"],
+    deps = [":ascii-combat-lib"],
+    linkopts = ["-lcurses"],
+)

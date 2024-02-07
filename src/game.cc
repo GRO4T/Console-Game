@@ -1,4 +1,4 @@
-#include"game.hpp"
+#include"game.h"
 
 void HandlePlayer(Player &player, Key * keys, int n, Player &opponent){
     int vx, vy;

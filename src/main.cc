@@ -1,5 +1,5 @@
-#include"game.hpp"
-#include"menu.hpp"
+#include "game.h"
+#include "menu.h"
 
 #include<list>
 #include<fstream>
