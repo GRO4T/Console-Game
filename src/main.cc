@@ -1,50 +1,50 @@
+#include <string.h>
+
+#include <fstream>
+#include <list>
+
 #include "game.h"
 #include "menu.h"
-
-#include<list>
-#include<fstream>
-#include<string.h>
 
 #define WINX 0
 #define WINY 0
 
 #define FILENAME "assets.txt"
 
-
-//some defines for if-statements
+// some defines for if-statements
 
 using namespace std;
 
-//Assets
+// Assets
 vector<vector<Clip>> playerAnimations;
 
 vector<vector<string>> maps;
 vector<string> map;
 
-void GetAssets(string filename); //gets assets and initializes characters
+void GetAssets(string filename);  // gets assets and initializes characters
 
-WINDOW * win;
+WINDOW* win;
 
-int main(){
+int main() {
     initscr();
     noecho();
-    cbreak(); //stop line buffering, pass everything
-    curs_set(0); //make cursor invisible
+    cbreak();     // stop line buffering, pass everything
+    curs_set(0);  // make cursor invisible
 
-    win = newwin(BOUND_UP + 2, BOUND_RIGHT + 2, WINX, WINY); //+2 is for the box
-    keypad(win, TRUE); //enable special characters
+    win =
+        newwin(BOUND_UP + 2, BOUND_RIGHT + 2, WINX, WINY);  //+2 is for the box
+    keypad(win, TRUE);  // enable special characters
 
     GetAssets(FILENAME);
 
     int choice;
-    do{
-        vector<string> choices = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT" };
+    do {
+        vector<string> choices = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
         choice = Menu(choices, 3);
-        if (choice == 1){
-
-        }
-        else if (choice == 2){
-            vector<string> choices = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
+        if (choice == 1) {
+        } else if (choice == 2) {
+            vector<string> choices = {"PLAIN FLAT", "HILLS", "VALLEY",
+                                      "PLATFORMER"};
             int c = Menu(choices, 4);
             int mapN = c == 0 ? 3 : c - 1;
             map = maps[mapN];
@@ -52,40 +52,40 @@ int main(){
             game.GameLoop();
         }
 
-    } while (choice); //menu returns 0 when exit is chosen
+    } while (choice);  // menu returns 0 when exit is chosen
 
     endwin();
 }
 
-void GetAssets(string filename){
+void GetAssets(string filename) {
     ifstream file;
     file.open(filename);
 
     string row = "";
-    do{
+    do {
         getline(file, row);
-        if (row != "EOF"){
-            if (row == "Player"){
-                for (int i = 0; i < ANIM_NUM; ++i){
+        if (row != "EOF") {
+            if (row == "Player") {
+                for (int i = 0; i < ANIM_NUM; ++i) {
                     vector<Clip> anim;
-                    while(1) {
+                    while (1) {
                         getline(file, row);
-                        if (row == "EOA") //End Of Animation
+                        if (row == "EOA")  // End Of Animation
                             break;
-                        else{
+                        else {
                             Clip clip(stoi(row));
-                            while(1){
+                            while (1) {
                                 vector<string> frame;
                                 getline(file, row);
-                                if (row == "EOC") //End Of Clip
+                                if (row == "EOC")  // End Of Clip
                                     break;
-                                else{
+                                else {
                                     frame.emplace_back(row);
-                                    while(1){
+                                    while (1) {
                                         getline(file, row);
-                                        if (row == "EFM") //End Of Frame
+                                        if (row == "EFM")  // End Of Frame
                                             break;
-                                        else{
+                                        else {
                                             frame.emplace_back(row);
                                         }
                                     }
@@ -98,10 +98,9 @@ void GetAssets(string filename){
                     }
                     playerAnimations.emplace_back(anim);
                 }
-            }
-            else if (row == "Map"){
+            } else if (row == "Map") {
                 vector<string> map;
-                while(1){
+                while (1) {
                     getline(file, row);
                     if (row == "EOM")
                         break;
