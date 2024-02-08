@@ -7,9 +7,13 @@
 #include "assets.h"
 #include "game.h"
 #include "menu.h"
+#include "window.h"
 
-constexpr int kWindowTopLeftX = 0;
-constexpr int kWindowTopLeftY = 0;
+constexpr uint32_t kWindowWidth = 80;
+constexpr uint32_t kWindowHeight = 20;
+constexpr uint32_t kWindowPadding = 2;
+constexpr int32_t kWindowTopLeftX = 0;
+constexpr int32_t kWindowTopLeftY = 0;
 
 const std::string kAssetsFileName = "assets.txt";
 // TODO: This should be read from the assets file.
@@ -23,19 +27,14 @@ vector<string> map;
 WINDOW* win;
 
 int main() {
-    initscr();
-    noecho();
-    cbreak();     // stop line buffering, pass everything
-    curs_set(0);  // make cursor invisible
-
-    win = newwin(BOUND_UP + 2, BOUND_RIGHT + 2, kWindowTopLeftX,
-                 kWindowTopLeftY);  //+2 is for the box
-    keypad(win, TRUE);              // enable special characters
+    ascii_combat::Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY,
+                                kWindowPadding);
 
     ascii_combat::Assets assets;
     assets.Load(kAssetsFileName);
 
     // NOTE: workaround for now
+    win = window.GetHandle();
     player_animations = assets.GetPlayerAnimations();
     maps = assets.GetMaps();
 
