@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include <algorithm>
 #include <fstream>
 #include <list>
 
@@ -11,12 +12,13 @@ constexpr int kWindowTopLeftX = 0;
 constexpr int kWindowTopLeftY = 0;
 
 const std::string kAssetsFileName = "assets.txt";
+// TODO: This should be read from the assets file.
+const std::vector<std::string> kGameModes = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
+const std::vector<std::string> kMapNames = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
 
 std::vector<std::vector<Clip>> player_animations;
 vector<vector<string>> maps;
 vector<string> map;
-
-void GetAssets(string filename);  // gets assets and initializes characters
 
 WINDOW* win;
 
@@ -37,22 +39,19 @@ int main() {
     player_animations = assets.GetPlayerAnimations();
     maps = assets.GetMaps();
 
-    int choice;
+    std::string game_mode = "";
     do {
-        vector<string> choices = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
-        choice = Menu(choices, 3);
-        if (choice == 1) {
-        } else if (choice == 2) {
-            vector<string> choices = {"PLAIN FLAT", "HILLS", "VALLEY",
-                                      "PLATFORMER"};
-            int c = Menu(choices, 4);
-            int mapN = c == 0 ? 3 : c - 1;
-            map = maps[mapN];
+        game_mode = ascii_combat::Menu(win, kGameModes).GetChoice();
+
+        if ("MULTIPLAYER" == game_mode) {
+            std::string map_name = ascii_combat::Menu(win, kMapNames).GetChoice();
+            std::size_t map_id =
+                std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
+            map = assets.GetMaps()[map_id];
             Multiplayer game;
             game.GameLoop();
         }
-
-    } while (choice);  // menu returns 0 when exit is chosen
+    } while ("EXIT" != game_mode);
 
     endwin();
 }

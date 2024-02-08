@@ -1,67 +1,26 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
 #include <ncurses.h>
 
-extern WINDOW* win;
+#include <string>
+#include <vector>
 
-int n_choices = 3;
+namespace ascii_combat {
 
-void PrintMenu(WINDOW* menu_win, int highlight, vector<string> choices,
-               int n_choices) {
-    int x, y, i;
+using Choice = std::string;
 
-    y = (BOUND_UP - 2) / 2;
+class Menu {
+   public:
+    Menu(WINDOW* window, const std::vector<Choice>& choices);
 
-    box(menu_win, 0, 0);
-    for (i = 0; i < n_choices; ++i) {
-        x = (BOUND_RIGHT - choices[i].length()) / 2;
-        if (highlight == i + 1) /* High light the present choice */
-        {
-            wattron(menu_win, A_REVERSE);
-            mvwprintw(menu_win, y, x, "%s", choices[i].c_str());
-            wattroff(menu_win, A_REVERSE);
-        } else
-            mvwprintw(menu_win, y, x, "%s", choices[i].c_str());
-        y += 2;
-    }
-    wrefresh(menu_win);
-}
-int Menu(vector<string> choices, int n_choices) {
-    int highlight = 1;
-    int choice = 0;
-    int c;
+    const Choice& GetChoice();
 
-    wclear(win);
-    PrintMenu(win, highlight, choices, n_choices);
+   private:
+    WINDOW* window_;
+    std::vector<Choice> choices_;
+    int highlighted_;
 
-    while (1) {
-        c = wgetch(win);
-        switch (c) {
-            case KEY_UP:
-                if (highlight == 1)
-                    highlight = n_choices;
-                else
-                    --highlight;
-                break;
-            case KEY_DOWN:
-                if (highlight == n_choices)
-                    highlight = 1;
-                else
-                    ++highlight;
-                break;
-            case 10:
-                choice = highlight;
-                break;
-        }
+    void Display();
+};
 
-        PrintMenu(win, highlight, choices, n_choices);
-
-        if (choice != 0)  // user did a choice
-            break;
-    }
-
-    if (choice == n_choices) return 0;
-    return choice;
-}
-#endif
+}  // namespace ascii_combat

@@ -5,6 +5,7 @@ cc_library(
     srcs = [
         "src/creature.cc",
         "src/game.cc",
+        "src/menu.cc",
         "src/assets.cc",
     ],
     hdrs = [
