@@ -20,7 +20,7 @@
 using namespace std::chrono_literals;
 
 extern WINDOW *win;
-extern vector<vector<Clip>> playerAnimations;
+extern vector<vector<Clip>> player_animations;
 extern vector<string> map;
 
 struct Key {
@@ -70,8 +70,8 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent);
 class Multiplayer : public Game {
    public:
     Multiplayer() : Game() {
-        player1.Set(0, 0, 0, 0, 3, 3, playerAnimations);
-        player2.Set(76, 0, 0, 0, 3, 3, playerAnimations);
+        player1.Set(0, 0, 0, 0, 3, 3, player_animations);
+        player2.Set(76, 0, 0, 0, 3, 3, player_animations);
     }
 
     void GameLoop();

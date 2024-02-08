@@ -5,11 +5,13 @@ cc_library(
     srcs = [
         "src/creature.cc",
         "src/game.cc",
+        "src/assets.cc",
     ],
     hdrs = [
         "include/creature.h",
         "include/game.h",
         "include/menu.h",
+        "include/assets.h",
     ],
     strip_include_prefix = "include",
 )
