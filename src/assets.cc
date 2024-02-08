@@ -21,9 +21,10 @@ void Assets::Load(const std::string& assets_filename) {
                         if (row == "EOA")  // End Of Animation
                             break;
                         else {
-                            Clip clip(stoi(row));
+                            int ticks_per_frame = stoi(row);
+                            std::vector<Frame> frames;
                             while (1) {
-                                vector<string> frame;
+                                Frame frame;
                                 getline(assets_file, row);
                                 if (row == "EOC")  // End Of Clip
                                     break;
@@ -37,11 +38,10 @@ void Assets::Load(const std::string& assets_filename) {
                                             frame.emplace_back(row);
                                         }
                                     }
-                                    clip.frames.emplace_back(frame);
-                                    ++(clip.len);
+                                    frames.emplace_back(frame);
                                 }
                             }
-                            anim.emplace_back(clip);
+                            anim.emplace_back(Clip(frames, ticks_per_frame));
                         }
                     }
                     player_animations_.emplace_back(anim);
@@ -63,9 +63,7 @@ void Assets::Load(const std::string& assets_filename) {
     assets_file.close();
 }
 
-const PlayerAnimations& Assets::GetPlayerAnimations() const {
-    return player_animations_;
-}
+const PlayerAnimations& Assets::GetPlayerAnimations() const { return player_animations_; }
 
 const std::vector<Map>& Assets::GetMaps() const { return maps_; }
 

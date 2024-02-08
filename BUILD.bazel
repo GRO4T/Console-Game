@@ -8,6 +8,7 @@ cc_library(
         "src/menu.cc",
         "src/assets.cc",
         "src/window.cc",
+        "src/clip.cc",
     ],
     hdrs = [
         "include/creature.h",
@@ -15,6 +16,7 @@ cc_library(
         "include/menu.h",
         "include/assets.h",
         "include/window.h",
+        "include/clip.h",
     ],
     strip_include_prefix = "include",
 )

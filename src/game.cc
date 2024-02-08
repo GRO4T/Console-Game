@@ -42,7 +42,7 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
         if (IS_CURR_ANIM_ATTACK_ANIM) {
             // if attack animation is at its final stage (to avoid hitting with
             // a sword at the beginning of the movement)
-            if (player.currentClip->state == player.currentClip->len - 1) {
+            if (player.current_clip_->IsFinished()) {
                 player.Attack(opponent);
             }
         }
@@ -102,10 +102,8 @@ void Multiplayer::GameLoop() {
             else if (player2.isDead)
                 msg1 = "Player1 won!";
 
-            mvwprintw(win, BOUND_UP / 2, (BOUND_RIGHT - msg1.length()) / 2,
-                      msg1.c_str());
-            mvwprintw(win, (BOUND_UP / 2) + 1,
-                      (BOUND_RIGHT - msg2.length()) / 2, msg2.c_str());
+            mvwprintw(win, BOUND_UP / 2, (BOUND_RIGHT - msg1.length()) / 2, msg1.c_str());
+            mvwprintw(win, (BOUND_UP / 2) + 1, (BOUND_RIGHT - msg2.length()) / 2, msg2.c_str());
 
             wgetch(win);
             EXIT = true;

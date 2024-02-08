@@ -88,6 +88,7 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 EOM
 Player
 1
+    
  [] 
 |##|
  || 
@@ -95,20 +96,24 @@ EFM
 EOC
 EOA
 2
+    
  [] 
 \##|
  |\ 
 EFM
+    
  [] 
 |##\
  \| 
 EFM
 EOC
 2
+    
  [] 
 |##/
  /| 
 EFM
+    
  [] 
 /##|
  |/ 
@@ -116,6 +121,7 @@ EFM
 EOC
 EOA
 1
+    
 \[]/
  ## 
  || 
@@ -133,6 +139,7 @@ EFM
 |##T  
  ||   
 EFM
+        
  []     
 |##H----
  ||     
@@ -149,6 +156,7 @@ EFM
     T##|
      || 
 EFM
+        
      [] 
 ----H##|
      || 
@@ -156,6 +164,7 @@ EFM
 EOC
 EOA
 1
+     
  ___ 
 |RIP|
 |###|

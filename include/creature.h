@@ -9,6 +9,10 @@
 #include <list>
 #include <vector>
 
+#include "clip.h"
+
+using namespace ascii_combat;
+
 #define CLAMP(x, lower, upper) (min(upper, max(x, lower)))
 #define BOUND_UP 20
 #define BOUND_RIGHT 80
@@ -25,24 +29,6 @@ class Creature;
 class Player;
 class Enemy;
 
-class Clip {
-   public:
-    vector<vector<string>> frames;
-    int len;    // length of the clip
-    int state;  // currently played animations
-    int timer;  // how much time until frame should be changed
-    int delay;  // initial timer value
-
-    void Draw(Creature &creature, int y, int x);
-    Clip(int _timer) {
-        len = 0;
-        state = 0;
-        timer = _timer;
-        delay = _timer;
-    }
-    ~Clip() { len = 0; }
-};
-
 class Creature {
    public:
     int x, y;    // current position of the top-left corner
@@ -55,10 +41,9 @@ class Creature {
 
     // animation
     vector<vector<Clip>> animations;
-    Clip *currentClip;
+    Clip *current_clip_;
 
     friend int inRange(Player &player, Creature *target);
-    friend void Clip::Draw(Creature &creature, int y, int x);
 
     Creature() {}
     Creature(int _x, int _y, int _vx, int _vy, int _range, int _health,
@@ -81,8 +66,7 @@ class Creature {
 class Player : public Creature {
    public:
     Player() {}
-    Player(int _x, int _y, int _vx, int _vy, int _range, int _health,
-           vector<vector<Clip>> &anims)
+    Player(int _x, int _y, int _vx, int _vy, int _range, int _health, vector<vector<Clip>> &anims)
         : Creature(_x, _y, _vx, _vy, _range, _health, anims) {}
 
     void Attack(list<Enemy *> &enemies);
@@ -97,8 +81,7 @@ class Player : public Creature {
 class Enemy : public Creature {
    public:
     Enemy() {}
-    Enemy(int _x, int _y, int _vx, int _vy, int _range, int _health,
-          vector<vector<Clip>> &anims)
+    Enemy(int _x, int _y, int _vx, int _vy, int _range, int _health, vector<vector<Clip>> &anims)
         : Creature(_x, _y, _vx, _vy, _range, _health, anims) {}
     void Attack(Player player) {}
 };

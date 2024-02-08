@@ -2,25 +2,6 @@
 #define ANCHOR_X 1
 #define ANCHOR_Y 1
 
-void Clip::Draw(Creature &creature, int y, int x) {
-    int i = creature.h - frames[state].size();
-    int q = 0;
-    for (auto r : frames[state]) {
-        q = 0;
-        for (auto c : r) {
-            if (c != ' ')
-                mvwprintw(win, ANCHOR_Y + y + i, ANCHOR_X + x + q, "%c", c);
-            ++q;
-        }
-        ++i;
-    }
-    --timer;
-    if (timer <= 0) {
-        timer = delay;
-        state = (state + 1) % len;
-    }
-}
-
 Creature::Creature(int _x, int _y, int _vx, int _vy, int _range, int _health,
                    vector<vector<Clip>> &anims) {
     Set(_x, _y, _vx, _vy, _range, _health, anims);
@@ -42,7 +23,7 @@ void Creature::Set(int _x, int _y, int _vx, int _vy, int _range, int _health,
     for (auto anim : anims) {
         animations.emplace_back(anim);
     }
-    currentClip = &animations[0][0];
+    current_clip_ = &animations[0][0];
 
     w = 4;
     h = 3;
@@ -51,33 +32,34 @@ void Creature::Set(int _x, int _y, int _vx, int _vy, int _range, int _health,
 
 void Creature::Draw() {
     int drawX = x;
+
     if (isDead) {
-        currentClip = &animations[4][0];
+        current_clip_ = &animations[4][0];
     } else if (isAttacking) {
         if (faceRight)
-            currentClip = &animations[3][0];
+            current_clip_ = &animations[3][0];
         else {
-            currentClip = &animations[3][1];
+            current_clip_ = &animations[3][1];
             drawX -= 4;
         }
 
-        if (currentClip->state == currentClip->len - 1) {
+        if (current_clip_->IsFinished()) {
             isAttacking = false;
-            currentClip->timer = 1;
+            current_clip_->SetTimer(1);
         }
     } else if (onGround && vx != 0) {
         // if is walking
         // if facing right
         if (faceRight)
-            currentClip = &animations[1][0];
+            current_clip_ = &animations[1][0];
         else
-            currentClip = &animations[1][1];
+            current_clip_ = &animations[1][1];
     } else if (!onGround)
-        currentClip = &animations[2][0];  // falling
+        current_clip_ = &animations[2][0];  // falling
     else
-        currentClip = &animations[0][0];  // idle
+        current_clip_ = &animations[0][0];  // idle
 
-    currentClip->Draw(*this, y, drawX);
+    current_clip_->Draw(win, y, drawX);
 }
 
 void Creature::Update(int _vx, int _vy) {
@@ -101,15 +83,13 @@ void Creature::Update(int _vx, int _vy) {
         bool cOccured = false;
         if (vy > 0) {
             int VY = vy;
-            for (int v = 1; v <= VY && !cOccured;
-                 ++v) {  // start with vector with length 1
+            for (int v = 1; v <= VY && !cOccured; ++v) {  // start with vector with length 1
                 vy = v;
                 if (y + h - 1 + v < BOUND_UP) {  // range checking
                     for (int c = x + 1; c < x + w - 1 && !cOccured;
-                         ++c) {  // check if we can move by this vector
-                        if (map[y + h + v - 1][c] ==
-                            'M') {  // if not, answer is vector 1 shorter
-                                    // otherwise we continue
+                         ++c) {                              // check if we can move by this vector
+                        if (map[y + h + v - 1][c] == 'M') {  // if not, answer is vector 1 shorter
+                                                             // otherwise we continue
                             vy = v - 1;
                             onGround = true;
                             cOccured = true;
@@ -137,8 +117,7 @@ void Creature::Update(int _vx, int _vy) {
                 }
             }
         } else {
-            if (map[y + h][x + 1] == ' ' && map[y + h][x + 2] == ' ')
-                onGround = false;
+            if (map[y + h][x + 1] == ' ' && map[y + h][x + 2] == ' ') onGround = false;
         }
         // for x Axis it will be little more complicated
         // because we wile be taking into account shapes
@@ -151,8 +130,7 @@ void Creature::Update(int _vx, int _vy) {
                     for (int c = x + w - 1; c >= x && !cOccured; --c) {
                         for (int r = y; r < y + h; ++r) {
                             if (map[r][c + v] == 'M' &&
-                                animations[0][0].frames[0][r - y][c - x] !=
-                                    ' ') {
+                                animations[0][0].GetFrames()[0][r - y][c - x] != ' ') {
                                 vx = v - 1;
                                 cOccured = true;
                             }
@@ -171,8 +149,7 @@ void Creature::Update(int _vx, int _vy) {
                     for (int c = x; c < x + w && !cOccured; ++c) {
                         for (int r = y; r < y + h; ++r) {
                             if (map[r][c + v] == 'M' &&
-                                animations[0][0].frames[0][r - y][c - x] !=
-                                    ' ') {
+                                animations[0][0].GetFrames()[0][r - y][c - x] != ' ') {
                                 vx = v + 1;
                                 cOccured = true;
                             }
@@ -202,10 +179,8 @@ void Creature::Update(int _vx, int _vy) {
 
 int inRange(Player &player, Creature *target) {
     if ((player.faceRight && player.x < target->x) ||
-        (!player.faceRight &&
-         player.x > target->x)) {  // if pointing towards enemy
-        if (abs(target->y - player.y) <= 1 &&
-            abs(target->x - player.x) <= player.range + player.w)
+        (!player.faceRight && player.x > target->x)) {  // if pointing towards enemy
+        if (abs(target->y - player.y) <= 1 && abs(target->x - player.x) <= player.range + player.w)
             return 1;
     }
     return 0;
@@ -213,8 +188,7 @@ int inRange(Player &player, Creature *target) {
 
 void Player::Attack(list<Enemy *> &enemies) {
     isAttacking = true;
-    for (std::list<Enemy *>::iterator it = enemies.begin(); it != enemies.end();
-         ++it) {
+    for (std::list<Enemy *>::iterator it = enemies.begin(); it != enemies.end(); ++it) {
         if (inRange(*this, *it)) {
             if ((*it)->isDead) {
                 delete *it;

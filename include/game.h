@@ -13,9 +13,9 @@
 #include "creature.h"
 
 #define KEY_NUM 4
-#define IS_CURR_ANIM_ATTACK_ANIM                       \
-    (player.currentClip == &player.animations[3][0] || \
-     player.currentClip == &player.animations[3][1])
+#define IS_CURR_ANIM_ATTACK_ANIM                         \
+    (player.current_clip_ == &player.animations[3][0] || \
+     player.current_clip_ == &player.animations[3][1])
 
 using namespace std::chrono_literals;
 
@@ -80,9 +80,8 @@ class Multiplayer : public Game {
     Player player1;
     Player player2;
 
-    Key keys1[KEY_NUM] = {
-        {KEY_DOWN, 0}, {KEY_UP, 0}, {KEY_LEFT, 0}, {KEY_RIGHT, 0}};  // ARROWS
-    Key keys2[KEY_NUM] = {{'s', 0}, {'w', 0}, {'a', 0}, {'d', 0}};   // WSAD
+    Key keys1[KEY_NUM] = {{KEY_DOWN, 0}, {KEY_UP, 0}, {KEY_LEFT, 0}, {KEY_RIGHT, 0}};  // ARROWS
+    Key keys2[KEY_NUM] = {{'s', 0}, {'w', 0}, {'a', 0}, {'d', 0}};                     // WSAD
 
     void ProcessInput();
     void Update() {
@@ -90,16 +89,13 @@ class Multiplayer : public Game {
         HandlePlayer(player2, keys2, KEY_NUM, player1);
     }
     void DisplayUI() {
-        string health_bar2 =
-            "health = " + to_string(player2.health >= 0 ? player2.health : 0);
+        string health_bar2 = "health = " + to_string(player2.health >= 0 ? player2.health : 0);
         wattron(win, A_REVERSE);
         mvwprintw(win, 1, 1, "Player1");
         mvwprintw(win, 1, BOUND_RIGHT - 7, "Player2");
         wattroff(win, A_REVERSE);
-        mvwprintw(win, 2, BOUND_RIGHT - health_bar2.length(),
-                  health_bar2.c_str());
-        mvwprintw(win, 2, 1, "health = %d",
-                  player1.health >= 0 ? player1.health : 0);
+        mvwprintw(win, 2, BOUND_RIGHT - health_bar2.length(), health_bar2.c_str());
+        mvwprintw(win, 2, 1, "health = %d", player1.health >= 0 ? player1.health : 0);
     }
     void Draw() {
         wclear(win);
