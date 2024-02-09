@@ -3,26 +3,21 @@
 #include <algorithm>
 #include <fstream>
 #include <list>
+#include <vector>
 
 #include "assets.h"
+#include "config.h"
 #include "game.h"
 #include "menu.h"
 #include "window.h"
 
-constexpr uint32_t kWindowWidth = 80;
-constexpr uint32_t kWindowHeight = 20;
-constexpr uint32_t kWindowPadding = 2;
-constexpr int32_t kWindowTopLeftX = 0;
-constexpr int32_t kWindowTopLeftY = 0;
-
-const std::string kAssetsFileName = "assets.txt";
 // TODO: This should be read from the assets file.
 const std::vector<std::string> kGameModes = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
 const std::vector<std::string> kMapNames = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
 
-std::vector<std::vector<Clip>> player_animations;
-vector<vector<string>> maps;
-vector<string> map;
+std::vector<std::vector<ascii_combat::Clip>> player_animations;
+std::vector<std::vector<std::string>> maps;
+std::vector<std::string> map;
 
 WINDOW* win;
 

@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include "config.h"
+
 void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
     int vx, vy;
     vx = vy = 0;
@@ -48,8 +50,8 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
         }
     }
 }
-bool Ask(string msg) {
-    mvwprintw(win, BOUND_UP / 2, (BOUND_RIGHT - msg.length()) / 2, msg.c_str());
+bool Ask(std::string msg) {
+    mvwprintw(win, kWindowHeight / 2, (kWindowWidth - msg.length()) / 2, msg.c_str());
     int c;
     while (1) {
         c = wgetch(win);
@@ -69,7 +71,7 @@ void Multiplayer::GameLoop() {
         if (!PAUSE) Update();
         Draw();
         if (PAUSE) {
-            string msg = "Do you really want to quit? (Y/N)";
+            std::string msg = "Do you really want to quit? (Y/N)";
             PAUSE = EXIT = Ask(msg);
         }
 
@@ -77,7 +79,7 @@ void Multiplayer::GameLoop() {
         elapsedTime = tp2 - tp1;
         tp1 = tp2;
         fElapsedTime = elapsedTime.count();
-        this_thread::sleep_for(66.8ms - elapsedTime);
+        std::this_thread::sleep_for(66.8ms - elapsedTime);
 
         // debugging
         /*
@@ -92,8 +94,8 @@ void Multiplayer::GameLoop() {
            }
            */
         if (player1.isDead || player2.isDead) {
-            string msg1;
-            string msg2 = "Press any key to continue...";
+            std::string msg1;
+            std::string msg2 = "Press any key to continue...";
 
             if (player1.isDead && player2.isDead)
                 msg1 = "It's a draw!";
@@ -102,8 +104,9 @@ void Multiplayer::GameLoop() {
             else if (player2.isDead)
                 msg1 = "Player1 won!";
 
-            mvwprintw(win, BOUND_UP / 2, (BOUND_RIGHT - msg1.length()) / 2, msg1.c_str());
-            mvwprintw(win, (BOUND_UP / 2) + 1, (BOUND_RIGHT - msg2.length()) / 2, msg2.c_str());
+            mvwprintw(win, kWindowHeight / 2, (kWindowWidth - msg1.length()) / 2, msg1.c_str());
+            mvwprintw(win, (kWindowHeight / 2) + 1, (kWindowWidth - msg2.length()) / 2,
+                      msg2.c_str());
 
             wgetch(win);
             EXIT = true;

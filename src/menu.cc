@@ -1,5 +1,7 @@
 #include "menu.h"
 
+#include "config.h"
+
 namespace ascii_combat {
 
 Menu::Menu(WINDOW* window, const std::vector<Choice>& choices)
@@ -34,14 +36,12 @@ const Choice& Menu::GetChoice() {
 }
 
 void Menu::Display() {
-    int bound_up = 20;
-    int bound_right = 80;
-    int y = (bound_up - 2) / 2;
+    int y = (kWindowHeight - 2) / 2;
 
     box(window_, 0, 0);
 
     for (std::size_t i = 0; i < choices_.size(); ++i) {
-        int x = (bound_right - choices_[i].size()) / 2;
+        int x = (kWindowWidth - choices_[i].size()) / 2;
         if (i == highlighted_) {
             wattron(window_, A_REVERSE);
             mvwprintw(window_, y, x, "%s", choices_[i].c_str());

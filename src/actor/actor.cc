@@ -1,14 +1,16 @@
-#include "creature.h"
-#define ANCHOR_X 1
-#define ANCHOR_Y 1
+#include "actor/actor.h"
 
-Creature::Creature(int _x, int _y, int _vx, int _vy, int _range, int _health,
-                   vector<vector<Clip>> &anims) {
+#include "config.h"
+
+namespace ascii_combat {
+
+Actor::Actor(int _x, int _y, int _vx, int _vy, int _range, int _health,
+             std::vector<std::vector<Clip>> &anims) {
     Set(_x, _y, _vx, _vy, _range, _health, anims);
 }
 
-void Creature::Set(int _x, int _y, int _vx, int _vy, int _range, int _health,
-                   vector<vector<Clip>> &anims) {
+void Actor::Set(int _x, int _y, int _vx, int _vy, int _range, int _health,
+                std::vector<std::vector<Clip>> &anims) {
     x = _x;
     y = _y;
     vx = _vx;
@@ -30,7 +32,7 @@ void Creature::Set(int _x, int _y, int _vx, int _vy, int _range, int _health,
     Update(0, 0);
 }
 
-void Creature::Draw() {
+void Actor::Draw() {
     int drawX = x;
 
     if (isDead) {
@@ -62,7 +64,7 @@ void Creature::Draw() {
     current_clip_->Draw(win, y, drawX);
 }
 
-void Creature::Update(int _vx, int _vy) {
+void Actor::Update(int _vx, int _vy) {
     if (!isDead) {
         if (vy == 0 && _vy != 0 && onGround) {
             vy = _vy;
@@ -85,7 +87,7 @@ void Creature::Update(int _vx, int _vy) {
             int VY = vy;
             for (int v = 1; v <= VY && !cOccured; ++v) {  // start with vector with length 1
                 vy = v;
-                if (y + h - 1 + v < BOUND_UP) {  // range checking
+                if (y + h - 1 + v < kWindowHeight) {  // range checking
                     for (int c = x + 1; c < x + w - 1 && !cOccured;
                          ++c) {                              // check if we can move by this vector
                         if (map[y + h + v - 1][c] == 'M') {  // if not, answer is vector 1 shorter
@@ -126,7 +128,7 @@ void Creature::Update(int _vx, int _vy) {
             int VX = vx;
             for (int v = 1; v <= VX && !cOccured; ++v) {
                 vx = v;
-                if (x + w + v - 1 < BOUND_RIGHT) {
+                if (x + w + v - 1 < kWindowWidth) {
                     for (int c = x + w - 1; c >= x && !cOccured; --c) {
                         for (int r = y; r < y + h; ++r) {
                             if (map[r][c + v] == 'M' &&
@@ -166,52 +168,9 @@ void Creature::Update(int _vx, int _vy) {
         x += vx;
         y += vy;
 
-        x = CLAMP(x, 0, BOUND_RIGHT - w);
-        y = CLAMP(y, 0, BOUND_UP - h - 1);
+        x = CLAMP(x, 0, (int32_t)kWindowWidth - w);
+        y = CLAMP(y, 0, (int32_t)kWindowHeight - h - 1);
     }
 }
 
-/*bool compare(Enemy & enemy1, Enemy & enemy2){
-  if (abs(enemy1.x - player.x) <= abs(enemy2.x - player.x))
-  return true;
-  return false;
-  }*/
-
-int inRange(Player &player, Creature *target) {
-    if ((player.faceRight && player.x < target->x) ||
-        (!player.faceRight && player.x > target->x)) {  // if pointing towards enemy
-        if (abs(target->y - player.y) <= 1 && abs(target->x - player.x) <= player.range + player.w)
-            return 1;
-    }
-    return 0;
-}
-
-void Player::Attack(list<Enemy *> &enemies) {
-    isAttacking = true;
-    for (std::list<Enemy *>::iterator it = enemies.begin(); it != enemies.end(); ++it) {
-        if (inRange(*this, *it)) {
-            if ((*it)->isDead) {
-                delete *it;
-                it = enemies.erase(it);
-            } else {
-                if (x > (*it)->x)
-                    (*it)->Update(-1, -1);
-                else
-                    (*it)->Update(1, -1);
-            }
-        }
-    }
-}
-
-void Player::Attack(Player &opponent) {
-    if (inRange(*this, &opponent)) {
-        opponent.GotHit();
-        if (opponent.isDead) {
-        } else {
-            if (x > opponent.x)
-                opponent.Update(-1, -1);
-            else
-                opponent.Update(1, -1);
-        }
-    }
-}
+}  // namespace ascii_combat

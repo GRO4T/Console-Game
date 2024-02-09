@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "creature.h"
+#include "actor/actor.h"
 
 namespace ascii_combat {
 

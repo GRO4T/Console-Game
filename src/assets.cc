@@ -9,13 +9,13 @@ void Assets::Load(const std::string& assets_filename) {
     std::ifstream assets_file;
     assets_file.open(assets_filename);
 
-    string row = "";
+    std::string row = "";
     do {
         getline(assets_file, row);
         if (row != "EOF") {
             if (row == "Player") {
                 for (int i = 0; i < ANIM_NUM; ++i) {
-                    vector<Clip> anim;
+                    std::vector<Clip> anim;
                     while (1) {
                         getline(assets_file, row);
                         if (row == "EOA")  // End Of Animation
@@ -47,7 +47,7 @@ void Assets::Load(const std::string& assets_filename) {
                     player_animations_.emplace_back(anim);
                 }
             } else if (row == "Map") {
-                vector<string> map;
+                std::vector<std::string> map;
                 while (1) {
                     getline(assets_file, row);
                     if (row == "EOM")

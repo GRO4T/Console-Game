@@ -10,7 +10,9 @@
 #include <chrono>
 #include <thread>
 
-#include "creature.h"
+#include "actor/actor.h"
+#include "actor/player.h"
+#include "config.h"
 
 #define KEY_NUM 4
 #define IS_CURR_ANIM_ATTACK_ANIM                         \
@@ -18,10 +20,11 @@
      player.current_clip_ == &player.animations[3][1])
 
 using namespace std::chrono_literals;
+using namespace ascii_combat;
 
 extern WINDOW *win;
-extern vector<vector<Clip>> player_animations;
-extern vector<string> map;
+extern std::vector<std::vector<Clip>> player_animations;
+extern std::vector<std::string> map;
 
 struct Key {
     int value;
@@ -89,12 +92,13 @@ class Multiplayer : public Game {
         HandlePlayer(player2, keys2, KEY_NUM, player1);
     }
     void DisplayUI() {
-        string health_bar2 = "health = " + to_string(player2.health >= 0 ? player2.health : 0);
+        std::string health_bar2 =
+            "health = " + std::to_string(player2.health >= 0 ? player2.health : 0);
         wattron(win, A_REVERSE);
         mvwprintw(win, 1, 1, "Player1");
-        mvwprintw(win, 1, BOUND_RIGHT - 7, "Player2");
+        mvwprintw(win, 1, kWindowWidth - 7, "Player2");
         wattroff(win, A_REVERSE);
-        mvwprintw(win, 2, BOUND_RIGHT - health_bar2.length(), health_bar2.c_str());
+        mvwprintw(win, 2, kWindowWidth - health_bar2.length(), health_bar2.c_str());
         mvwprintw(win, 2, 1, "health = %d", player1.health >= 0 ? player1.health : 0);
     }
     void Draw() {
