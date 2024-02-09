@@ -3,11 +3,11 @@
 namespace ascii_combat {
 
 void Player::Attack(Player &opponent) {
-    if (inRange(this, &opponent)) {
+    if (IsInRange(this, &opponent)) {
         opponent.GotHit();
-        if (opponent.isDead) {
+        if (opponent.IsDead()) {
         } else {
-            if (x > opponent.x)
+            if (GetX() > opponent.GetX())
                 opponent.Update(-1, -1);
             else
                 opponent.Update(1, -1);
@@ -15,11 +15,12 @@ void Player::Attack(Player &opponent) {
     }
 }
 
-bool Player::inRange(Actor *player, Actor *target) {
-    if ((player->faceRight && player->x < target->x) ||
-        (!player->faceRight && player->x > target->x)) {  // if pointing towards enemy
-        if (abs(target->y - player->y) <= 1 &&
-            abs(target->x - player->x) <= player->GetRange() + player->GetWidth())
+bool Player::IsInRange(Actor *player, Actor *target) {
+    if ((player->IsFacingRight() && player->GetX() < target->GetX()) ||
+        (!player->IsFacingRight() &&
+         player->GetX() > target->GetX())) {  // if pointing towards enemy
+        if (abs(target->GetY() - player->GetY()) <= 1 &&
+            abs(target->GetX() - player->GetX()) <= player->GetAttackRange() + player->GetWidth())
             return true;
     }
     return false;

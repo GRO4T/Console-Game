@@ -16,7 +16,7 @@ class Player : public Actor {
     void Attack(Player &opponent);
 
    private:
-    bool inRange(Actor *player, Actor *target);
+    bool IsInRange(Actor *player, Actor *target);
 };
 
 }  // namespace ascii_combat

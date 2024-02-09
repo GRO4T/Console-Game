@@ -13,7 +13,9 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
         if (keys[i].pressed) {
             switch (i) {
                 case 0:
-                    if (player.onGround) player.isAttacking = true;
+                    if (player.IsGrounded()) {
+                        player.SetIsAttacking(true);
+                    }
                     BREAK = true;
                     break;
                 case 1:
@@ -21,16 +23,16 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
                     BREAK = true;
                     break;
                 case 2:
-                    if (!player.isAttacking) {
+                    if (!player.IsAttacking()) {
                         vx += -vSpeed;
-                        player.faceRight = false;
+                        player.SetIsFacingRight(false);
                         BREAK = true;
                         break;
                     }
                 case 3:
-                    if (!player.isAttacking) {
+                    if (!player.IsAttacking()) {
                         vx += vSpeed;
-                        player.faceRight = true;
+                        player.SetIsFacingRight(true);
                         BREAK = true;
                         break;
                     }
@@ -38,13 +40,13 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
         }
     }
 
-    if (!(player.isAttacking)) {
+    if (!(player.IsAttacking())) {
         player.Update(vx, vy);
     } else {
         if (IS_CURR_ANIM_ATTACK_ANIM) {
             // if attack animation is at its final stage (to avoid hitting with
             // a sword at the beginning of the movement)
-            if (player.current_clip_->IsFinished()) {
+            if (player.GetCurrentClip()->IsFinished()) {
                 player.Attack(opponent);
             }
         }
@@ -93,15 +95,15 @@ void Multiplayer::GameLoop() {
            keys2[3].pressed);
            }
            */
-        if (player1.isDead || player2.isDead) {
+        if (player1.IsDead() || player2.IsDead()) {
             std::string msg1;
             std::string msg2 = "Press any key to continue...";
 
-            if (player1.isDead && player2.isDead)
+            if (player1.IsDead() && player2.IsDead())
                 msg1 = "It's a draw!";
-            else if (player1.isDead)
+            else if (player1.IsDead())
                 msg1 = "Player2 won!";
-            else if (player2.isDead)
+            else if (player2.IsDead())
                 msg1 = "Player1 won!";
 
             mvwprintw(win, kWindowHeight / 2, (kWindowWidth - msg1.length()) / 2, msg1.c_str());

@@ -7,23 +7,25 @@
 #define DEBUG 0
 #endif
 
+#include <sys/select.h>
+
 #include <chrono>
 #include <thread>
 
 #include "actor/actor.h"
 #include "actor/player.h"
+#include "assets.h"
 #include "config.h"
 
 #define KEY_NUM 4
 #define IS_CURR_ANIM_ATTACK_ANIM                         \
-    (player.current_clip_ == &player.animations[3][0] || \
-     player.current_clip_ == &player.animations[3][1])
+    (player.GetCurrentClip() == &player.GetAnimations()[3][0] || \
+     player.GetCurrentClip() == &player.GetAnimations()[3][1])
 
 using namespace std::chrono_literals;
 using namespace ascii_combat;
 
 extern WINDOW *win;
-extern std::vector<std::vector<Clip>> player_animations;
 extern std::vector<std::string> map;
 
 struct Key {
@@ -73,8 +75,8 @@ void HandlePlayer(Player &player, Key *keys, int n, Player &opponent);
 class Multiplayer : public Game {
    public:
     Multiplayer() : Game() {
-        player1.Set(0, 0, 0, 0, 3, 3, player_animations);
-        player2.Set(76, 0, 0, 0, 3, 3, player_animations);
+        player1.Set(0, 0, 0, 0, 3, 3, ascii_combat::Assets::Instance().GetPlayerAnimations());
+        player2.Set(76, 0, 0, 0, 3, 3, ascii_combat::Assets::Instance().GetPlayerAnimations());
     }
 
     void GameLoop();
@@ -93,13 +95,13 @@ class Multiplayer : public Game {
     }
     void DisplayUI() {
         std::string health_bar2 =
-            "health = " + std::to_string(player2.health >= 0 ? player2.health : 0);
+            "health = " + std::to_string(player2.GetHealth() >= 0 ? player2.GetHealth() : 0);
         wattron(win, A_REVERSE);
         mvwprintw(win, 1, 1, "Player1");
         mvwprintw(win, 1, kWindowWidth - 7, "Player2");
         wattroff(win, A_REVERSE);
         mvwprintw(win, 2, kWindowWidth - health_bar2.length(), health_bar2.c_str());
-        mvwprintw(win, 2, 1, "health = %d", player1.health >= 0 ? player1.health : 0);
+        mvwprintw(win, 2, 1, "health = %d", player1.GetHealth() >= 0 ? player1.GetHealth() : 0);
     }
     void Draw() {
         wclear(win);
@@ -108,7 +110,7 @@ class Multiplayer : public Game {
         for (auto r : map) {
             mvwprintw(win, 1 + i++, 1, "%s", r.c_str());
         }
-        if (player2.isDead) {
+        if (player2.IsDead()) {
             player2.Draw();
             player1.Draw();
         } else {

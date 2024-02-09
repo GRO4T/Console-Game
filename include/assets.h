@@ -11,13 +11,18 @@ using Map = std::vector<std::string>;
 
 class Assets {
    public:
-    Assets() = default;
-    void Load(const std::string& assets_filename);
+    Assets(Assets& other) = delete;
+    void operator=(const Assets&) = delete;
+
+    static Assets& Instance();
 
     const PlayerAnimations& GetPlayerAnimations() const;
     const std::vector<Map>& GetMaps() const;
 
    private:
+    Assets();
+    ~Assets() = default;
+
     // TODO: Refactor PlayerAnimations.
     PlayerAnimations player_animations_;
     std::vector<Map> maps_;

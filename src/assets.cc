@@ -2,12 +2,14 @@
 
 #include <fstream>
 
+#include "config.h"
+
 namespace ascii_combat {
 
 // TODO: write unit tests and refactor this
-void Assets::Load(const std::string& assets_filename) {
+Assets::Assets() {
     std::ifstream assets_file;
-    assets_file.open(assets_filename);
+    assets_file.open(kAssetsFileName);
 
     std::string row = "";
     do {
@@ -61,6 +63,11 @@ void Assets::Load(const std::string& assets_filename) {
 
     } while (row != "EOF");
     assets_file.close();
+}
+
+Assets& Assets::Instance() {
+    static Assets assets;
+    return assets;
 }
 
 const PlayerAnimations& Assets::GetPlayerAnimations() const { return player_animations_; }

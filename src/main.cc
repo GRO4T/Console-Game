@@ -15,8 +15,6 @@
 const std::vector<std::string> kGameModes = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
 const std::vector<std::string> kMapNames = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
 
-std::vector<std::vector<ascii_combat::Clip>> player_animations;
-std::vector<std::vector<std::string>> maps;
 std::vector<std::string> map;
 
 WINDOW* win;
@@ -25,13 +23,8 @@ int main() {
     ascii_combat::Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY,
                                 kWindowPadding);
 
-    ascii_combat::Assets assets;
-    assets.Load(kAssetsFileName);
-
     // NOTE: workaround for now
     win = window.GetHandle();
-    player_animations = assets.GetPlayerAnimations();
-    maps = assets.GetMaps();
 
     std::string game_mode = "";
     do {
@@ -41,7 +34,7 @@ int main() {
             std::string map_name = ascii_combat::Menu(win, kMapNames).GetChoice();
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
-            map = assets.GetMaps()[map_id];
+            map = Assets::Instance().GetMaps()[map_id];
             Multiplayer game;
             game.GameLoop();
         }
