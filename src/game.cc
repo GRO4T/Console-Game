@@ -1,147 +1,154 @@
 #include "game.h"
 
+#include <iostream>
+
 #include "config.h"
 
-void HandlePlayer(Player &player, Key *keys, int n, Player &opponent) {
-    int vx, vy;
-    vx = vy = 0;
-    int vSpeed = 2;
-    int jumpForce = 3;
+using namespace std::chrono_literals;
 
-    bool BREAK = false;
-    for (int i = 0; i < KEY_NUM && !BREAK; ++i) {
-        if (keys[i].pressed) {
-            switch (i) {
-                case 0:
-                    if (player.IsGrounded()) {
-                        player.SetIsAttacking(true);
-                    }
-                    BREAK = true;
-                    break;
-                case 1:
-                    vy += -jumpForce;
-                    BREAK = true;
-                    break;
-                case 2:
-                    if (!player.IsAttacking()) {
-                        vx += -vSpeed;
-                        player.SetIsFacingRight(false);
-                        BREAK = true;
-                        break;
-                    }
-                case 3:
-                    if (!player.IsAttacking()) {
-                        vx += vSpeed;
-                        player.SetIsFacingRight(true);
-                        BREAK = true;
-                        break;
-                    }
+namespace ascii_combat {
+
+Game::Game(Window& window, const std::vector<std::string>& map,
+           const std::vector<KeyMapping>& key_maps)
+    : window_(window),
+      state_(State::kRunning),
+      map_(map),
+      key_maps_(key_maps),
+      players_({PlayerFactory::CreatePlayer(0, 0, true, key_maps[0], map),
+                PlayerFactory::CreatePlayer(76, 0, false, key_maps[1], map)}) {}
+
+void Game::GameLoop() {
+    while (true) {
+        const auto start = std::chrono::system_clock::now();
+
+        if (State::kPaused == state_) {
+            std::string question = "Do you really want to quit? (Y/N)";
+            auto answer = AskYesOrNo(question);
+            if (answer == Answer::kYes) {
+                return;
             }
         }
-    }
 
-    if (!(player.IsAttacking())) {
-        player.Update(vx, vy);
-    } else {
-        if (IS_CURR_ANIM_ATTACK_ANIM) {
-            // if attack animation is at its final stage (to avoid hitting with
-            // a sword at the beginning of the movement)
-            if (player.GetCurrentClip()->IsFinished()) {
-                player.Attack(opponent);
-            }
-        }
-    }
-}
-bool Ask(std::string msg) {
-    mvwprintw(win, kWindowHeight / 2, (kWindowWidth - msg.length()) / 2, msg.c_str());
-    int c;
-    while (1) {
-        c = wgetch(win);
-        if (c == 'y' || c == 'Y') {
-            return true;
-        } else if (c == 'n' || c == 'N') {
-            return false;
-        }
-    }
-}
-void Multiplayer::GameLoop() {
-    auto tp1 = std::chrono::system_clock::now();
-    auto tp2 = tp1;
-    while (1) {
-        tp1 = std::chrono::system_clock::now();
-        ProcessInput();
-        if (!PAUSE) Update();
+        const auto input = GetInput();
+        Update(input);
         Draw();
-        if (PAUSE) {
-            std::string msg = "Do you really want to quit? (Y/N)";
-            PAUSE = EXIT = Ask(msg);
+
+        const auto end = std::chrono::system_clock::now();
+        const auto elapsed_time_duration = end - start;
+        const auto elapsed_time = elapsed_time_duration.count();
+
+        std::this_thread::sleep_for(66.8ms - elapsed_time_duration);
+
+        if (players_[0].IsDead() || players_[1].IsDead()) {
+            End();
+            return;
         }
 
-        tp2 = std::chrono::system_clock::now();
-        elapsedTime = tp2 - tp1;
-        tp1 = tp2;
-        fElapsedTime = elapsedTime.count();
-        std::this_thread::sleep_for(66.8ms - elapsedTime);
-
-        // debugging
-        /*
-           if (DEBUG){
-           mvwprintw(win, 1,1,"%d %d onGround = %d attack = %d", player1.x,
-           player1.y, player1.onGround, player1.isAttacking); mvwprintw(win, 5,
-           3, "%d %d %d", player1.vx, player1.vy, 'g'); mvwprintw(win, 3, 3, "%d
-           %d %d %d", keys1[0].pressed, keys1[1].pressed, keys1[2].pressed,
-           keys1[3].pressed); mvwprintw(win, 4, 3, "%d %d %d %d",
-           keys2[0].pressed, keys2[1].pressed, keys2[2].pressed,
-           keys2[3].pressed);
-           }
-           */
-        if (player1.IsDead() || player2.IsDead()) {
-            std::string msg1;
-            std::string msg2 = "Press any key to continue...";
-
-            if (player1.IsDead() && player2.IsDead())
-                msg1 = "It's a draw!";
-            else if (player1.IsDead())
-                msg1 = "Player2 won!";
-            else if (player2.IsDead())
-                msg1 = "Player1 won!";
-
-            mvwprintw(win, kWindowHeight / 2, (kWindowWidth - msg1.length()) / 2, msg1.c_str());
-            mvwprintw(win, (kWindowHeight / 2) + 1, (kWindowWidth - msg2.length()) / 2,
-                      msg2.c_str());
-
-            wgetch(win);
-            EXIT = true;
-        }
-
-        if (EXIT) break;
-        wrefresh(win);
+        wrefresh(window_.GetHandle());
     }
 }
 
-void Multiplayer::ProcessInput() {
-    int n = KEY_NUM;
-    int c;
-    for (int i = 0; i < n; ++i) {
-        keys1[i].pressed = false;
-        keys2[i].pressed = false;
+Input Game::GetInput() {
+    Input input;
+
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 1;
+
+    for (const auto& key_map : key_maps_) {
+        input.insert({key_map.up, KeyState::kReleased});
+        input.insert({key_map.down, KeyState::kReleased});
+        input.insert({key_map.left, KeyState::kReleased});
+        input.insert({key_map.right, KeyState::kReleased});
     }
 
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 1;
-    int x = 0;  // we must limit keys that can be written
-    while (KeyBoardHit(tv)) {
-        c = wgetch(win);
-        if (x++ < n) {
-            for (int i = 0; i < n; ++i) {
-                if (c == keys1[i].value)
-                    keys1[i].pressed = true;
-                else if (c == keys2[i].value)
-                    keys2[i].pressed = true;
-                else if (c == 'q')
-                    PAUSE = true;
-            }
+    while (WaitForInput(timeout)) {
+        int c = wgetch(window_.GetHandle());
+        if (c == 'q') {
+            state_ = State::kPaused;
+        } else if (input.find(c) != input.end()) {  // TODO: Change to C++20 std::contains
+            input[c] = KeyState::kPressed;
+        }
+    }
+
+    return input;
+}
+
+void Game::Update(const Input& input) {
+    players_[0].Update(input, players_[1]);
+    players_[1].Update(input, players_[0]);
+}
+
+void Game::Draw() {
+    WINDOW* win = window_.GetHandle();
+    wclear(win);
+    // Draw map
+    box(win, 0, 0);
+    for (int i = 0; i < map_.size(); ++i) {
+        mvwprintw(win, 1 + i++, 1, "%s", map_[i].c_str());
+    }
+    // Draw players
+    // TODO: Check why is it necessary
+    if (players_[1].IsDead()) {
+        players_[1].Draw(win);
+        players_[0].Draw(win);
+    } else {
+        players_[0].Draw(win);
+        players_[1].Draw(win);
+    }
+    DisplayUI();
+}
+
+void Game::End() {
+    std::string msg1;
+    const std::string msg2 = "Press any key to continue...";
+
+    if (players_[0].IsDead() && players_[1].IsDead())
+        msg1 = "It's a draw!";
+    else if (players_[0].IsDead())
+        msg1 = "Player2 won!";
+    else if (players_[1].IsDead())
+        msg1 = "Player1 won!";
+
+    DisplayTextCenter(window_, msg1);
+    DisplayTextCenter(window_, msg2, 1);
+
+    wgetch(window_.GetHandle());
+}
+
+Game::Answer Game::AskYesOrNo(const std::string& question) {
+    DisplayTextCenter(window_, question);
+    while (true) {
+        char c = wgetch(window_.GetHandle());
+        if (c == 'y' || c == 'Y') {
+            return Answer::kYes;
+        } else if (c == 'n' || c == 'N') {
+            return Answer::kNo;
         }
     }
 }
+
+void Game::DisplayTextCenter(Window& window, const std::string& text, int32_t offset_y) {
+    mvwprintw(window.GetHandle(), window.GetHeight() / 2 + offset_y,
+              (window.GetWidth() - text.length()) / 2, text.c_str());
+}
+
+void Game::DisplayUI() {
+    const auto player1_health = players_[0].GetHealth();
+    const auto player2_health = players_[1].GetHealth();
+
+    std::string health_bar1 =
+        "health = " + std::to_string(player1_health >= 0 ? player1_health : 0);
+    std::string health_bar2 =
+        "health = " + std::to_string(player2_health >= 0 ? player2_health : 0);
+
+    wattron(window_.GetHandle(), A_REVERSE);
+    mvwprintw(window_.GetHandle(), 1, 1, "Player1");
+    mvwprintw(window_.GetHandle(), 1, window_.GetWidth() - 7, "Player2");
+    wattroff(window_.GetHandle(), A_REVERSE);
+    mvwprintw(window_.GetHandle(), 2, 1, health_bar1.c_str());
+    mvwprintw(window_.GetHandle(), 2, window_.GetWidth() - health_bar2.length(),
+              health_bar2.c_str());
+}
+
+}  // namespace ascii_combat

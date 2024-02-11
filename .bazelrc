@@ -1,0 +1,11 @@
+# GCC
+build:gcc --cxxopt=-std=c++20
+build:gcc --cxxopt=-Wall
+build:gcc --cxxopt=-Werror
+build:gcc --cxxopt=-Wextra
+
+# Clang
+build:clang --cxxopt=-std=c++20
+build:clang --cxxopt=-Wall
+# build:clang --cxxopt=-Werror
+buildd:clang --cxxopt=-Wextra

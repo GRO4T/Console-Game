@@ -3,23 +3,23 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 cc_library(
     name = "ascii-combat-lib",
     srcs = [
-        "src/actor/actor.cc",
-        "src/actor/player.cc",
+        "src/player.cc",
         "src/game.cc",
         "src/menu.cc",
         "src/assets.cc",
         "src/window.cc",
         "src/clip.cc",
+        "src/input.cc",
     ],
     hdrs = [
-        "include/actor/actor.h",
-        "include/actor/player.h",
+        "include/player.h",
         "include/game.h",
         "include/menu.h",
         "include/assets.h",
         "include/window.h",
         "include/clip.h",
         "include/config.h",
+        "include/input.h",
     ],
     strip_include_prefix = "include",
 )

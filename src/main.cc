@@ -15,27 +15,21 @@
 const std::vector<std::string> kGameModes = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
 const std::vector<std::string> kMapNames = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
 
-std::vector<std::string> map;
-
-WINDOW* win;
+using namespace ascii_combat;
 
 int main() {
-    ascii_combat::Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY,
-                                kWindowPadding);
-
-    // NOTE: workaround for now
-    win = window.GetHandle();
+    Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY, kWindowPadding);
 
     std::string game_mode = "";
     do {
-        game_mode = ascii_combat::Menu(win, kGameModes).GetChoice();
+        game_mode = Menu(window.GetHandle(), kGameModes).GetChoice();
 
         if ("MULTIPLAYER" == game_mode) {
-            std::string map_name = ascii_combat::Menu(win, kMapNames).GetChoice();
+            std::string map_name = Menu(window.GetHandle(), kMapNames).GetChoice();
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
-            map = Assets::Instance().GetMaps()[map_id];
-            Multiplayer game;
+            auto map = Assets::Instance().GetMaps()[map_id];
+            Game game(window, map, {kKeyMap1, kKeyMap2});
             game.GameLoop();
         }
     } while ("EXIT" != game_mode);

@@ -14,14 +14,15 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
+            "MIMode": "lldb",
         },
         {
             "name": "Attach to running ASCII Combat",
             "type": "cppdbg",
             "request": "attach",
             "program": "${workspaceFolder}/bazel-bin/ascii-combat",
-            "processId": "${command:pickProcess}"
+            "processId": "${command:pickProcess}",
+            "MIMode": "lldb"
         },
     ]
 }

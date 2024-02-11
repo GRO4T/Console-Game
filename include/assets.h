@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "actor/actor.h"
+#include "clip.h"
 
 namespace ascii_combat {
 
@@ -16,7 +16,7 @@ class Assets {
 
     static Assets& Instance();
 
-    const PlayerAnimations& GetPlayerAnimations() const;
+    PlayerAnimations& GetPlayerAnimations();
     const std::vector<Map>& GetMaps() const;
 
    private:

@@ -16,7 +16,7 @@ Assets::Assets() {
         getline(assets_file, row);
         if (row != "EOF") {
             if (row == "Player") {
-                for (int i = 0; i < ANIM_NUM; ++i) {
+                for (int i = 0; i < 5; ++i) {
                     std::vector<Clip> anim;
                     while (1) {
                         getline(assets_file, row);
@@ -70,7 +70,7 @@ Assets& Assets::Instance() {
     return assets;
 }
 
-const PlayerAnimations& Assets::GetPlayerAnimations() const { return player_animations_; }
+PlayerAnimations& Assets::GetPlayerAnimations() { return player_animations_; }
 
 const std::vector<Map>& Assets::GetMaps() const { return maps_; }
 

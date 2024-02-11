@@ -10,14 +10,25 @@ For the purpose of loading assets I developed simple markup language.
 ![](docs/game_view.png)
 
 ## Building the project
+### Linux
+Release build
 ```
-mkdir build
-cd build
-cmake ..
-make
+bazel build --config=gcc -c opt //:ascii-combat
 ```
-This should result in a binary named ConsoleGame.
-It is important that asset files are in the same directory as the binary.
+Debug build
+```
+bazel build --config=gcc -c dbg //:ascii-combat
+```
+
+### Mac OS
+Release build
+```
+bazel build --config=clang -c opt //:ascii-combat
+```
+Debug build
+```
+bazel build --config=clang -c dbg //:ascii-combat
+```
 
 ## Markup language
 For the purpose of loading assets simple markup language was implemented.
