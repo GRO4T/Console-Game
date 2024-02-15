@@ -100,3 +100,24 @@ Remove quarantine for following files:
 ```
 sudo xattr -d com.apple.quarantine <file>
 ```
+
+## TODOs
+### Small
+* Use Bazel's `select` to differentiate between platform.
+* Rename targets to <os>-<compiler>-<arch>, e.g. macOS-clang-arm64, linux-gcc-x86.
+
+### Medium
+* Create a CI.
+* Add GTest.
+* Modernize the code.
+* Implement simple event system.
+* Test and refactor assets module.
+* Add more weapons.
+
+### Big
+* Implement networking based on Protobufs.
+* Implement a simple AI bot.
+* Package the app.
+
+### Optional
+* Add simple audio effects.
