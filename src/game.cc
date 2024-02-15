@@ -65,12 +65,17 @@ Input Game::GetInput() {
     }
 
     while (WaitForInput(timeout)) {
-        int c = wgetch(window_.GetHandle());
-        if (c == 'q') {
-            state_ = State::kPaused;
-        } else if (input.contains(c)) {
-            input[c] = KeyState::kPressed;
-        }
+        int c;
+        do {
+            // NOTE: ncurses cannot handle multi-key input
+            // TODO: use something else for IO
+            c = wgetch(window_.GetHandle());
+            if (c == 'q') {
+                state_ = State::kPaused;
+            } else if (input.contains(c)) {
+                input[c] = KeyState::kPressed;
+            }
+        } while (c != ERR);
     }
 
     return input;

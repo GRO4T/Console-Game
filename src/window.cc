@@ -13,7 +13,8 @@ Window::Window(uint32_t height, uint32_t width, int32_t top_left_x, int32_t top_
 
     handle_ = newwin(height + padding, width + padding, top_left_x, top_left_y);
 
-    keypad(handle_, TRUE);  // enable special characters
+    nodelay(handle_, true);  // make wgetch non-blocking
+    keypad(handle_, TRUE);   // enable special characters
 }
 
 WINDOW* Window::GetHandle() { return handle_; }
