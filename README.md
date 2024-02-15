@@ -7,38 +7,72 @@ For graphics I used ncurses library and developed ASCII art characters.
 The game implements simple UI.
 For the purpose of loading assets I developed simple markup language.
 
-![](docs/game_view.png)
-
 ## Building the project
+Project can be built using a `built.sh` script which is a simple wrapper
+for Bazel CLI.
+
 ### Linux
-Release build
+Release
 ```
-bazel build --config=gcc -c opt //:ascii-combat
+./build.sh gcc opt
 ```
-Debug build
+Debug
 ```
-bazel build --config=gcc -c dbg //:ascii-combat
+./build.sh gcc dbg
 ```
 
 ### Mac OS
-Release build
+Release
 ```
-bazel build --config=clang -c opt //:ascii-combat
+./build.sh clang opt
 ```
-Debug build
+Debug
 ```
-bazel build --config=clang -c dbg //:ascii-combat
+./build.sh clang dbg
 ```
 
-## Tools
-### Clang-Tidy
+## How to run
+To start the game simply run:
 ```
-clang-tidy src/*.cc -- -Iinclude/ -std=c++20
+./bazel-bin/ascii-combat
 ```
-### Cppcheck
+You will be welcomed with this simple menu.
+
+![Game's menu](docs/menu.png)
+
+> **_NOTE:_**  SINGLEPLAYER mode is not currently implemented.
+
+### Multiplayer mode
+In multiplayer mode players play using the same keyboard. Player1 (on the left) is using WSAD keys. Player2 controls the character with arrows.
+
+Controls:
+* up: jump;
+* down: attack;
+* left: go left;
+* right: go right;
+
+![Multiplayer game mode](docs/game_view.png)
+
+At any time you can pause/exit the game by pressing `q`.
+
+## Development
+## Lint
+To lint the project run:
 ```
-cppcheck src/*.cc
+./lint.sh
 ```
+Configured linters:
+* cppcheck
+* cpplint
+* clang-tidy
+
+## Apply fixes
+To automatically apply code fixes run:
+```
+./fix.sh
+```
+This will format the code, apply fixes from clang-tidy and automatically
+add missing copyright clauses.
 
 ## Markup language
 For the purpose of loading assets simple markup language was implemented.
@@ -55,3 +89,14 @@ For Player: (read animations)
 * read animations until END markup
 
 Parsing finishes when EOF is found
+
+## Troubleshooting
+### macOS disallows loading of dynamic libraries
+Remove quarantine for following files:
+* libsfml-system.2.6.dylib
+* libsfml-system.2.6.1.dylib
+* libsfml-window.2.6.dylib
+* libsfml-window.2.6.1.dylib
+```
+sudo xattr -d com.apple.quarantine <file>
+```
