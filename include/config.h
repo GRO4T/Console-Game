@@ -1,5 +1,7 @@
+/* Copyright 2024 Damian Kolaska */
 #pragma once
 
+#include <ncurses.h>
 #include <stdint.h>
 
 #include <string>
@@ -14,7 +16,7 @@ constexpr uint32_t kWindowPadding = 2;
 constexpr int32_t kWindowTopLeftX = 0;
 constexpr int32_t kWindowTopLeftY = 0;
 
-const std::string kAssetsFileName = "assets.txt";
+const char* kAssetsFileName = "assets.txt";
 
 constexpr KeyMapping kKeyMap1{KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT};
 constexpr KeyMapping kKeyMap2{'w', 's', 'a', 'd'};

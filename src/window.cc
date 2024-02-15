@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #include "window.h"
 
 namespace ascii_combat {

@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #pragma once
 
 #include <ncurses.h>

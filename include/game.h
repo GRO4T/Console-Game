@@ -1,7 +1,9 @@
+/* Copyright 2024 Damian Kolaska */
 #pragma once
 
-#include <chrono>
-#include <thread>
+#include <chrono>  // NOLINT
+#include <thread>  // NOLINT
+#include <vector>
 
 #include "assets.h"
 #include "config.h"
@@ -17,7 +19,7 @@ namespace ascii_combat {
 
 class Game {
    public:
-    Game(Window& window, const std::vector<std::string>& map,
+    Game(Window& window, const std::vector<std::string>& map,  // NOLINT
          const std::vector<KeyMapping>& key_maps);
     void GameLoop();
 
@@ -37,7 +39,8 @@ class Game {
     void End();
 
     Answer AskYesOrNo(const std::string& question);
-    static void DisplayTextCenter(Window& window, const std::string& text, int32_t offset_y = 0);
+    static void DisplayTextCenter(Window& window, const std::string& text,  // NOLINT
+                                  int32_t offset_y = 0);
     void DisplayUI();
 };
 

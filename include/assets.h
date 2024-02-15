@@ -1,5 +1,7 @@
+/* Copyright 2024 Damian Kolaska */
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "clip.h"
@@ -11,7 +13,7 @@ using Map = std::vector<std::string>;
 
 class Assets {
    public:
-    Assets(Assets& other) = delete;
+    Assets(const Assets& other) = delete;
     void operator=(const Assets&) = delete;
 
     static Assets& Instance();
@@ -23,7 +25,7 @@ class Assets {
     Assets();
     ~Assets() = default;
 
-    // TODO: Refactor PlayerAnimations.
+    // TODO(GRO4T): Refactor PlayerAnimations.
     PlayerAnimations player_animations_;
     std::vector<Map> maps_;
 };

@@ -30,6 +30,16 @@ Debug build
 bazel build --config=clang -c dbg //:ascii-combat
 ```
 
+## Tools
+### Clang-Tidy
+```
+clang-tidy src/*.cc -- -Iinclude/ -std=c++20
+```
+### Cppcheck
+```
+cppcheck src/*.cc
+```
+
 ## Markup language
 For the purpose of loading assets simple markup language was implemented.
 ### How it works

@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #include <string.h>
 
 #include <algorithm>
@@ -11,11 +12,11 @@
 #include "menu.h"
 #include "window.h"
 
-// TODO: This should be read from the assets file.
+// TODO(GRO4T): This should be read from the assets file.
 const std::vector<std::string> kGameModes = {"SINGLEPLAYER", "MULTIPLAYER", "EXIT"};
 const std::vector<std::string> kMapNames = {"PLAIN FLAT", "HILLS", "VALLEY", "PLATFORMER"};
 
-using namespace ascii_combat;
+using namespace ascii_combat;  // NOLINT
 
 int main() {
     Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY, kWindowPadding);

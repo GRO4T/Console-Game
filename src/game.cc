@@ -1,10 +1,11 @@
+/* Copyright 2024 Damian Kolaska */
 #include "game.h"
 
-#include <iostream>
+#include <unordered_map>
 
 #include "config.h"
 
-using namespace std::chrono_literals;
+using namespace std::chrono_literals;  // NOLINT
 
 namespace ascii_combat {
 
@@ -26,6 +27,8 @@ void Game::GameLoop() {
             auto answer = AskYesOrNo(question);
             if (answer == Answer::kYes) {
                 return;
+            } else {
+                state_ = State::kRunning;
             }
         }
 
@@ -34,10 +37,9 @@ void Game::GameLoop() {
         Draw();
 
         const auto end = std::chrono::system_clock::now();
-        const auto elapsed_time_duration = end - start;
-        const auto elapsed_time = elapsed_time_duration.count();
+        const auto elapsed_time = end - start;
 
-        std::this_thread::sleep_for(66.8ms - elapsed_time_duration);
+        std::this_thread::sleep_for(66.8ms - elapsed_time);
 
         if (players_[0].IsDead() || players_[1].IsDead()) {
             End();
@@ -66,7 +68,7 @@ Input Game::GetInput() {
         int c = wgetch(window_.GetHandle());
         if (c == 'q') {
             state_ = State::kPaused;
-        } else if (input.find(c) != input.end()) {  // TODO: Change to C++20 std::contains
+        } else if (input.contains(c)) {
             input[c] = KeyState::kPressed;
         }
     }
@@ -84,11 +86,10 @@ void Game::Draw() {
     wclear(win);
     // Draw map
     box(win, 0, 0);
-    for (int i = 0; i < map_.size(); ++i) {
-        mvwprintw(win, 1 + i++, 1, "%s", map_[i].c_str());
+    for (std::size_t i = 0; i < map_.size(); ++i) {
+        mvwprintw(win, i, 1, "%s", map_[i].c_str());
     }
     // Draw players
-    // TODO: Check why is it necessary
     if (players_[1].IsDead()) {
         players_[1].Draw(win);
         players_[0].Draw(win);

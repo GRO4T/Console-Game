@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #include "assets.h"
 
 #include <fstream>
@@ -6,7 +7,7 @@
 
 namespace ascii_combat {
 
-// TODO: write unit tests and refactor this
+// TODO(GRO4T): write unit tests and refactor this
 Assets::Assets() {
     std::ifstream assets_file;
     assets_file.open(kAssetsFileName);
@@ -20,23 +21,23 @@ Assets::Assets() {
                     std::vector<Clip> anim;
                     while (1) {
                         getline(assets_file, row);
-                        if (row == "EOA")  // End Of Animation
+                        if (row == "EOA") {  // End Of Animation
                             break;
-                        else {
+                        } else {
                             int ticks_per_frame = stoi(row);
                             std::vector<Frame> frames;
                             while (1) {
                                 Frame frame;
                                 getline(assets_file, row);
-                                if (row == "EOC")  // End Of Clip
+                                if (row == "EOC") {  // End Of Clip
                                     break;
-                                else {
+                                } else {
                                     frame.emplace_back(row);
                                     while (1) {
                                         getline(assets_file, row);
-                                        if (row == "EFM")  // End Of Frame
+                                        if (row == "EFM") {  // End Of Frame
                                             break;
-                                        else {
+                                        } else {
                                             frame.emplace_back(row);
                                         }
                                     }
@@ -60,7 +61,6 @@ Assets::Assets() {
                 maps_.emplace_back(map);
             }
         }
-
     } while (row != "EOF");
     assets_file.close();
 }

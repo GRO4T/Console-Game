@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #include "input.h"
 
 namespace ascii_combat {

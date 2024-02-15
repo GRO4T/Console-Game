@@ -1,3 +1,4 @@
+/* Copyright 2024 Damian Kolaska */
 #pragma once
 
 #include <math.h>
@@ -6,19 +7,12 @@
 #include <cassert>
 #include <iostream>
 #include <list>
+#include <utility>
 #include <vector>
 
 #include "assets.h"
 #include "clip.h"
 #include "input.h"
-
-#define CLAMP(x, lower, upper) (std::min(upper, std::max(x, lower)))
-
-#define ANIM_NUM 5
-
-extern std::vector<std::string> map;  // TODO: Move to Game singleton.
-
-extern WINDOW *win;  // TODO: Draw should be called by the game engine.
 
 namespace ascii_combat {
 
@@ -26,34 +20,17 @@ class Player {
    public:
     Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
            int health, bool is_facing_right, const KeyMapping &key_map, const Map &map,
-           std::vector<std::vector<Clip>> &anims);
-
-    int32_t GetX() const;
-    int32_t GetY() const;
-    int32_t GetSpeed() const;
-    int32_t GetJumpForce() const;
-    uint32_t GetWidth() const;
+           std::vector<std::vector<Clip>> &anims);  // NOLINT
 
     int32_t GetHealth() const;
-    bool IsGrounded() const;
-    bool IsFacingRight() const;
-    bool IsAttacking() const;
     bool IsDead() const;
-
-    uint32_t GetAttackRange() const;
 
     const std::vector<std::vector<Clip>> &GetAnimations() const;
     Clip *GetCurrentClip() const;
 
-    void SetIsFacingRight(bool value);
-    void SetIsAttacking(bool value);
-
     void Draw(WINDOW *win);
-    void Update(const Input &input, Player &opponent);
+    void Update(const Input &input, Player &opponent);  // NOLINT
     void Move(int32_t dx, int32_t dy);
-
-    void Attack(Player &opponent);
-    void GotHit() { is_dead_ = --health_ <= 0; }
 
    private:
     int32_t x_;  // NOTE: position is calculated from top-left corner.
@@ -79,7 +56,11 @@ class Player {
     std::vector<std::vector<Clip>> animations_;
     Clip *current_clip_;
 
-    bool IsInRange(Player *player, Player *target);
+    std::pair<int32_t, int32_t> UpdateMovement(const Input &input);
+    void UpdateCurrentClip();
+    void Attack(Player &opponent);  // NOLINT
+    void GotHit() { is_dead_ = --health_ <= 0; }
+    bool IsOpponentInAttackRange(Player &opponent);  // NOLINT
 };
 
 class PlayerFactory {
