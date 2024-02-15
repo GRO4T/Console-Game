@@ -1,6 +1,7 @@
 /* Copyright 2024 Damian Kolaska */
 #include <string.h>
 
+#include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
 #include <fstream>
 #include <list>
@@ -20,6 +21,10 @@ using namespace ascii_combat;  // NOLINT
 
 int main() {
     Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY, kWindowPadding);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        std::cout << "left pressed\n";
+    }
 
     std::string game_mode = "";
     do {

@@ -43,7 +43,7 @@ You will be welcomed with this simple menu.
 > **_NOTE:_**  SINGLEPLAYER mode is not currently implemented.
 
 ### Multiplayer mode
-In multiplayer mode players play using the same keyboard. Player1 (on the left) is using WSAD keys. Player2 controls the character with arrows.
+In multiplayer mode players play using the same keyboard. *Player1* (on the left) is using WSAD keys. *Player2* controls the character with arrows.
 
 Controls:
 * up: jump;
