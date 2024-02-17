@@ -1,4 +1,12 @@
+# macOS garbage
+**/.DS_Store
+
+# Bazel
 bazel-*
+MODULE.bazel
+MODULE.bazel.lock
+
+# VS Code
 .vscode/settings.json
 .vscode/c_cpp_properties.json
-**/.DS_Store
+
