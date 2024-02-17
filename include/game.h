@@ -2,7 +2,6 @@
 #pragma once
 
 #include <chrono>  // NOLINT
-#include <thread>  // NOLINT
 #include <vector>
 
 #include "assets.h"
@@ -20,7 +19,7 @@ namespace ascii_combat {
 class Game {
    public:
     Game(Window& window, const std::vector<std::string>& map,  // NOLINT
-         const std::vector<KeyMapping>& key_maps);
+         const std::vector<Player::Controls>& player_controls_list);
     void GameLoop();
 
    private:
@@ -30,7 +29,6 @@ class Game {
     Window& window_;
     State state_;
     const std::vector<std::string>& map_;
-    std::vector<KeyMapping> key_maps_;
     std::vector<Player> players_;
 
     Input GetInput();

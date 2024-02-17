@@ -1,12 +1,10 @@
 /* Copyright 2024 Damian Kolaska */
 #pragma once
 
-#include <ncurses.h>
 #include <stdint.h>
 
-#include <string>
-
 #include "input.h"
+#include "player.h"
 
 namespace ascii_combat {
 
@@ -18,8 +16,8 @@ constexpr int32_t kWindowTopLeftY = 0;
 
 const char* kAssetsFileName = "assets.txt";
 
-constexpr KeyMapping kKeyMap1{KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT};
-constexpr KeyMapping kKeyMap2{'w', 's', 'a', 'd'};
+constexpr Player::Controls kControlsPlayer1{Key::kW, Key::kS, Key::kA, Key::kD};
+constexpr Player::Controls kControlsPlayer2{Key::kUp, Key::kDown, Key::kLeft, Key::kRight};
 
 constexpr uint32_t kPlayerWidth = 3;
 constexpr uint32_t kPlayerHeight = 4;

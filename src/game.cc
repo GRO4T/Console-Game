@@ -1,8 +1,10 @@
 /* Copyright 2024 Damian Kolaska */
 #include "game.h"
 
+#include <thread>  // NOLINT
 #include <unordered_map>
 
+#include "SFML/Window/Keyboard.hpp"
 #include "config.h"
 
 using namespace std::chrono_literals;  // NOLINT
@@ -10,13 +12,12 @@ using namespace std::chrono_literals;  // NOLINT
 namespace ascii_combat {
 
 Game::Game(Window& window, const std::vector<std::string>& map,
-           const std::vector<KeyMapping>& key_maps)
+           const std::vector<Player::Controls>& player_controls_list)
     : window_(window),
       state_(State::kRunning),
       map_(map),
-      key_maps_(key_maps),
-      players_({PlayerFactory::CreatePlayer(0, 0, true, key_maps[0], map),
-                PlayerFactory::CreatePlayer(76, 0, false, key_maps[1], map)}) {}
+      players_({PlayerFactory::CreatePlayer(0, 0, true, player_controls_list[0], map),
+                PlayerFactory::CreatePlayer(76, 0, false, player_controls_list[1], map)}) {}
 
 void Game::GameLoop() {
     while (true) {
@@ -39,7 +40,7 @@ void Game::GameLoop() {
         const auto end = std::chrono::system_clock::now();
         const auto elapsed_time = end - start;
 
-        std::this_thread::sleep_for(66.8ms - elapsed_time);
+        std::this_thread::sleep_for(4 * 16.7ms - elapsed_time);
 
         if (players_[0].IsDead() || players_[1].IsDead()) {
             End();
@@ -53,30 +54,21 @@ void Game::GameLoop() {
 Input Game::GetInput() {
     Input input;
 
-    struct timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 1;
+    auto SetKeyState = [&](const auto key, const auto key_sfml) {
+        auto key_state =
+            sf::Keyboard::isKeyPressed(key_sfml) ? KeyState::kPressed : KeyState::kReleased;
+        input.insert({key, key_state});
+    };
 
-    for (const auto& key_map : key_maps_) {
-        input.insert({key_map.up, KeyState::kReleased});
-        input.insert({key_map.down, KeyState::kReleased});
-        input.insert({key_map.left, KeyState::kReleased});
-        input.insert({key_map.right, KeyState::kReleased});
-    }
-
-    while (WaitForInput(timeout)) {
-        int c;
-        do {
-            // NOTE: ncurses cannot handle multi-key input
-            // TODO: use something else for IO
-            c = wgetch(window_.GetHandle());
-            if (c == 'q') {
-                state_ = State::kPaused;
-            } else if (input.contains(c)) {
-                input[c] = KeyState::kPressed;
-            }
-        } while (c != ERR);
-    }
+    SetKeyState(Key::kW, sf::Keyboard::W);
+    SetKeyState(Key::kS, sf::Keyboard::S);
+    SetKeyState(Key::kA, sf::Keyboard::A);
+    SetKeyState(Key::kD, sf::Keyboard::D);
+    SetKeyState(Key::kUp, sf::Keyboard::Up);
+    SetKeyState(Key::kDown, sf::Keyboard::Down);
+    SetKeyState(Key::kLeft, sf::Keyboard::Left);
+    SetKeyState(Key::kRight, sf::Keyboard::Right);
+    SetKeyState(Key::kQ, sf::Keyboard::Q);
 
     return input;
 }
@@ -138,6 +130,16 @@ void Game::DisplayTextCenter(Window& window, const std::string& text, int32_t of
     mvwprintw(window.GetHandle(), window.GetHeight() / 2 + offset_y,
               (window.GetWidth() - text.length()) / 2, text.c_str());
 }
+
+// sf::Keyboard::Key Game::MapToSFML(const int key_code) {
+//     std::unordered_map<int, sf::Keyboard::Key> mapping = {
+//         {'w', sf::Keyboard::W},         {'s', sf::Keyboard::S},
+//         {'a', sf::Keyboard::A},         {'d', sf::Keyboard::D},
+//         {KEY_UP, sf::Keyboard::Up},     {KEY_DOWN, sf::Keyboard::Down},
+//         {KEY_LEFT, sf::Keyboard::Left}, {KEY_RIGHT, sf::Keyboard::Right},
+//     };
+//     return mapping[key_code];
+// }
 
 void Game::DisplayUI() {
     const auto player1_health = players_[0].GetHealth();

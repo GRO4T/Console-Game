@@ -1,19 +1,18 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_import")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 
-cc_import(
-    name = "sfml-window",
-    hdrs = glob(["lib/SFML-2.6.1/macOS-clang-arm64/include/SFML/Window/*.hpp"]) + glob(["lib/SFML-2.6.1/macOS-clang-arm64/include/SFML/*.hpp"]),
-    includes = ["lib/SFML-2.6.1/macOS-clang-arm64/include"],
-    shared_library = "lib/SFML-2.6.1/macOS-clang-arm64/lib/libsfml-window.2.6.dylib",
-    alwayslink = 1,
-)
 
-cc_import(
-    name = "sfml-system",
-    hdrs = glob(["lib/SFML-2.6.1/macOS-clang-arm64/include/SFML/System/*.hpp"]) + glob(["lib/SFML-2.6.1/macOS-clang-arm64/include/SFML/*.hpp"]),
-    includes = ["lib/SFML-2.6.1/macOS-clang-arm64/include"],
-    shared_library = "lib/SFML-2.6.1/macOS-clang-arm64/lib/libsfml-system.2.6.dylib",
-    alwayslink = 1,
+cmake(
+    name = "sfml",
+    lib_source = "@sfml//:all_srcs",
+    out_shared_libs = [
+        "libsfml-system.2.6.1.dylib",
+        "libsfml-system.2.6.dylib",
+        "libsfml-system.dylib",
+        "libsfml-window.2.6.1.dylib",
+        "libsfml-window.2.6.dylib",
+        "libsfml-window.dylib",
+    ],
 )
 
 cc_library(
@@ -38,11 +37,12 @@ cc_library(
         "include/input.h",
     ],
     strip_include_prefix = "include",
+    deps = [":sfml"]
 )
 
 cc_binary(
     name = "ascii-combat",
     srcs = ["src/main.cc"],
-    deps = [":ascii-combat-lib", ":sfml-window", ":sfml-system"],
+    deps = [":ascii-combat-lib"],
     linkopts = ["-lcurses"],
 )

@@ -7,14 +7,14 @@ Window::Window(uint32_t height, uint32_t width, int32_t top_left_x, int32_t top_
                uint32_t padding)
     : height_(height), width_(width) {
     initscr();
-    noecho();
+    noecho();     // do not echo characters back to terminal
     cbreak();     // stop line buffering, pass everything
     curs_set(0);  // make cursor invisible
 
     handle_ = newwin(height + padding, width + padding, top_left_x, top_left_y);
 
-    nodelay(handle_, true);  // make wgetch non-blocking
-    keypad(handle_, TRUE);   // enable special characters
+    nodelay(handle_, true);  // non-blocking input
+    keypad(handle_, true);   // enable special characters
 }
 
 WINDOW* Window::GetHandle() { return handle_; }

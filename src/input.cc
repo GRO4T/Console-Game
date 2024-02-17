@@ -1,13 +1,11 @@
 /* Copyright 2024 Damian Kolaska */
 #include "input.h"
 
-namespace ascii_combat {
+// #include <SFML/Window/Keyboard.hpp>
+#include <exception>
+#include <iostream>
+#include <set>
 
-bool WaitForInput(timeval timeout) {
-    fd_set readfds;
-    FD_ZERO(&readfds);
-    FD_SET(0, &readfds);  // REMINDER: In UNIX, file descriptor 0 corresponds to standard input
-    return select(1, &readfds, nullptr, nullptr, &timeout);
-}
+using namespace std::chrono_literals;  // NOLINT
 
-}  // namespace ascii_combat
+namespace ascii_combat {}  // namespace ascii_combat

@@ -6,7 +6,7 @@
 namespace ascii_combat {
 
 Player::Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
-               int health, bool is_facing_right, const KeyMapping& key_map, const Map& map,
+               int health, bool is_facing_right, const Player::Controls& controls, const Map& map,
                std::vector<std::vector<Clip>>& anims)
     : x_(x),
       y_(y),
@@ -21,7 +21,7 @@ Player::Player(int x, int y, int width, int height, int speed, int jump_force, i
       is_attacking_(false),
       is_dead_(false),
       attack_range_(attack_range),
-      key_map_(key_map),
+      controls_(controls),
       map_(map) {
     for (auto anim : anims) {
         animations_.emplace_back(anim);
@@ -178,16 +178,16 @@ void Player::Move(int32_t dx, int32_t dy) {
 }
 
 std::pair<int32_t, int32_t> Player::UpdateMovement(const Input& input) {
-    bool is_down_pressed = input.at(key_map_.down) == KeyState::kPressed;
-    bool is_up_pressed = input.at(key_map_.up) == KeyState::kPressed;
-    bool is_left_pressed = input.at(key_map_.left) == KeyState::kPressed;
-    bool is_right_pressed = input.at(key_map_.right) == KeyState::kPressed;
+    bool is_attack_pressed = input.at(controls_.attack) == KeyState::kPressed;
+    bool is_jump_pressed = input.at(controls_.jump) == KeyState::kPressed;
+    bool is_left_pressed = input.at(controls_.left) == KeyState::kPressed;
+    bool is_right_pressed = input.at(controls_.right) == KeyState::kPressed;
 
     int32_t dx = 0;
     int32_t dy = 0;
-    if (is_down_pressed && is_grounded_) {
+    if (is_attack_pressed && is_grounded_) {
         is_attacking_ = true;
-    } else if (is_up_pressed) {
+    } else if (is_jump_pressed) {
         dy -= jump_force_;
     } else if (is_left_pressed && !is_attacking_) {
         dx -= speed_;
@@ -245,10 +245,10 @@ bool Player::IsOpponentInAttackRange(Player& opponent) {
     return false;
 }
 
-Player PlayerFactory::CreatePlayer(int x, int y, bool is_facing_right, const KeyMapping& key_map,
-                                   const Map& map) {
+Player PlayerFactory::CreatePlayer(int x, int y, bool is_facing_right,
+                                   const Player::Controls& controls, const Map& map) {
     return Player(x, y, kPlayerWidth, kPlayerHeight, 3, 3, kPlayerAttackRange, kPlayerHealth,
-                  is_facing_right, key_map, map, Assets::Instance().GetPlayerAnimations());
+                  is_facing_right, controls, map, Assets::Instance().GetPlayerAnimations());
 }
 
 }  // namespace ascii_combat

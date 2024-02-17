@@ -18,8 +18,15 @@ namespace ascii_combat {
 
 class Player {
    public:
+    struct Controls {
+        Key jump;
+        Key attack;
+        Key left;
+        Key right;
+    };
+
     Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
-           int health, bool is_facing_right, const KeyMapping &key_map, const Map &map,
+           int health, bool is_facing_right, const Controls &controls, const Map &map,
            std::vector<std::vector<Clip>> &anims);  // NOLINT
 
     int32_t GetHealth() const;
@@ -50,7 +57,7 @@ class Player {
 
     uint32_t attack_range_;
 
-    const KeyMapping key_map_;
+    const Controls controls_;
     const Map map_;
 
     std::vector<std::vector<Clip>> animations_;
@@ -65,7 +72,7 @@ class Player {
 
 class PlayerFactory {
    public:
-    static Player CreatePlayer(int x, int y, bool is_facing_right, const KeyMapping &key_map,
+    static Player CreatePlayer(int x, int y, bool is_facing_right, const Player::Controls &controls,
                                const Map &map);
 };
 

@@ -1,3 +1,3 @@
 #!/bin/bash
 # TODO: Detect operating system
-bazel build --config="$1" -c "$2" //:ascii-combat
+bazel build --jobs 8 --noenable_bzlmod --config="$1" -c "$2" //:all

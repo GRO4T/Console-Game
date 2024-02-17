@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO(GRO4T): integrate linting directly into Bazel
+
 echo "============================== cpplint (headers) ============================="
 cpplint include/*.h
 
@@ -12,9 +14,9 @@ echo "============================== cpplint (sources) =========================
 cpplint src/*.cc
 
 echo "============================== cppcheck (sources) ============================="
-cppcheck --language=c++ --std=c++11 src/*.cc
+cppcheck --language=c++ --std=c++20 src/*.cc
 
 echo "============================== clang-tidy (sources) ==========================="
-clang-tidy src/*.cc -- -Iinclude/ -std=c++20 -Wall -Wextra
+clang-tidy src/*.cc -- -Iinclude/ -Ibazel-bin/sfml/include -std=c++20 -Wall -Wextra
 
 echo "================================= Finished ==================================="

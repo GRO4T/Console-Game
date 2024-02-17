@@ -1,7 +1,6 @@
 /* Copyright 2024 Damian Kolaska */
 #include <string.h>
 
-#include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
 #include <fstream>
 #include <list>
@@ -22,10 +21,6 @@ using namespace ascii_combat;  // NOLINT
 int main() {
     Window window(kWindowHeight, kWindowWidth, kWindowTopLeftX, kWindowTopLeftY, kWindowPadding);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        std::cout << "left pressed\n";
-    }
-
     std::string game_mode = "";
     do {
         game_mode = Menu(window.GetHandle(), kGameModes).GetChoice();
@@ -35,10 +30,12 @@ int main() {
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
             auto map = Assets::Instance().GetMaps()[map_id];
-            Game game(window, map, {kKeyMap1, kKeyMap2});
+            Game game(window, map, {kControlsPlayer1, kControlsPlayer2});
             game.GameLoop();
         }
     } while ("EXIT" != game_mode);
 
     endwin();
+
+    return 0;
 }

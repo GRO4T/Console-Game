@@ -7,19 +7,10 @@
 
 namespace ascii_combat {
 
-using KeyCode = int;
-
-struct KeyMapping {
-    int up;
-    int down;
-    int left;
-    int right;
-};
+enum class Key { kW, kS, kA, kD, kUp, kDown, kLeft, kRight, kQ };
 
 enum class KeyState { kPressed, kReleased };
 
-bool WaitForInput(timeval timeout);
-
-using Input = std::unordered_map<KeyCode, KeyState>;
+using Input = std::unordered_map<Key, KeyState>;
 
 }  // namespace ascii_combat
