@@ -131,16 +131,6 @@ void Game::DisplayTextCenter(Window& window, const std::string& text, int32_t of
               (window.GetWidth() - text.length()) / 2, text.c_str());
 }
 
-// sf::Keyboard::Key Game::MapToSFML(const int key_code) {
-//     std::unordered_map<int, sf::Keyboard::Key> mapping = {
-//         {'w', sf::Keyboard::W},         {'s', sf::Keyboard::S},
-//         {'a', sf::Keyboard::A},         {'d', sf::Keyboard::D},
-//         {KEY_UP, sf::Keyboard::Up},     {KEY_DOWN, sf::Keyboard::Down},
-//         {KEY_LEFT, sf::Keyboard::Left}, {KEY_RIGHT, sf::Keyboard::Right},
-//     };
-//     return mapping[key_code];
-// }
-
 void Game::DisplayUI() {
     const auto player1_health = players_[0].GetHealth();
     const auto player2_health = players_[1].GetHealth();
