@@ -2,6 +2,8 @@
 #include "player.h"
 
 #include "config.h"
+#include "event.h"
+#include "event_system.h"
 
 namespace ascii_combat {
 
@@ -32,13 +34,23 @@ Player::Player(int x, int y, int width, int height, int speed, int jump_force, i
     current_clip_ = &animations_[0][0];
 }
 
-int32_t Player::GetHealth() const { return health_; }
-
 const std::vector<std::vector<Clip>>& Player::GetAnimations() const { return animations_; }
 
 Clip* Player::GetCurrentClip() const { return current_clip_; }
 
-bool Player::IsDead() const { return is_dead_; }
+int32_t Player::GetX() const { return x_; }
+
+int32_t Player::GetY() const { return y_; }
+
+uint32_t Player::GetWidth() const { return width_; }
+
+int32_t Player::GetHealth() const { return health_; }
+
+bool Player::IsFacingRight() const { return is_facing_right_; }
+
+bool Player::IsDead() const { return health_ <= 0; }
+
+uint32_t Player::GetAttackRange() const { return attack_range_; }
 
 void Player::Draw(Window& window) {
     int draw_x = x_;
@@ -61,7 +73,8 @@ void Player::Update(const Input& input, Player& opponent) {
     bool is_current_clip_attack =
         current_clip_ == &animations_[3][0] || current_clip_ == &animations_[3][1];
     if (is_attacking_ && is_current_clip_attack && current_clip_->IsFinished()) {
-        Attack(opponent);
+        EventSystem::Instance().CreateEvent(
+            std::make_unique<PlayerAttackEvent>(*this, opponent, 1));
         is_attacking_ = false;
         return;
     }
@@ -182,6 +195,16 @@ void Player::Move(int32_t dx, int32_t dy) {
     }
 }
 
+void Player::GotHit(uint32_t damage, const Direction& attacked_from) {
+    health_ -= damage;
+
+    if (Direction::kRight == attacked_from) {
+        Move(-1, -1);
+    } else {
+        Move(1, -1);
+    }
+}
+
 std::pair<int32_t, int32_t> Player::UpdateMovement(const Input& input) {
     bool is_attack_pressed = input.at(controls_.attack) == KeyState::kPressed;
     bool is_jump_pressed = input.at(controls_.jump) == KeyState::kPressed;
@@ -223,32 +246,6 @@ void Player::UpdateCurrentClip() {
     } else {
         current_clip_ = &animations_[0][0];  // idle
     }
-}
-
-void Player::Attack(Player& opponent) {
-    if (IsOpponentInAttackRange(opponent)) {
-        opponent.GotHit();
-        if (opponent.IsDead()) {
-        } else {
-            if (x_ > opponent.x_)
-                opponent.Move(-1, -1);
-            else
-                opponent.Move(1, -1);
-        }
-    }
-}
-
-bool Player::IsOpponentInAttackRange(Player& opponent) {
-    // TODO(GRO4T): this should be checked by a Game class when Attack event is fired
-    bool facing_right_direction_if_enemy_on_the_right = is_facing_right_ && x_ < opponent.x_;
-    bool facing_right_direction_if_enemy_on_the_left = !is_facing_right_ && x_ > opponent.x_;
-    if (facing_right_direction_if_enemy_on_the_right ||
-        facing_right_direction_if_enemy_on_the_left) {
-        if (abs(opponent.y_ - y_) <= 1 &&
-            abs(opponent.x_ - x_) <= (int32_t)(attack_range_ + width_))
-            return true;
-    }
-    return false;
 }
 
 Player PlayerFactory::CreatePlayer(int x, int y, bool is_facing_right,

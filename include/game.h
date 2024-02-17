@@ -7,6 +7,7 @@
 
 #include "assets.h"
 #include "config.h"
+#include "event.h"
 #include "input.h"
 #include "player.h"
 #include "window.h"
@@ -19,7 +20,7 @@ namespace ascii_combat {
 
 class Game {
    public:
-    Game(Window& window, const std::vector<std::string>& map,  // NOLINT
+    Game(Window& window, const std::vector<std::string>& map,
          const std::vector<Player::Controls>& player_controls_list);
     void GameLoop();
 
@@ -33,9 +34,12 @@ class Game {
     std::vector<Player> players_;
 
     Input GetInput();
+    void ProcessEvents();
     void Update(const Input& input);
     void Draw();
     void End();
+
+    void Handle(const PlayerAttackEvent& event);
 
     Answer AskYesOrNo(const std::string& question);
     void DisplayUI();

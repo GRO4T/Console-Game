@@ -6,6 +6,7 @@
 
 #include "SFML/Window/Keyboard.hpp"
 #include "config.h"
+#include "event_system.h"
 
 using namespace std::chrono_literals;  // NOLINT
 
@@ -34,6 +35,7 @@ void Game::GameLoop() {
         }
 
         const auto input = GetInput();
+        ProcessEvents();
         Update(input);
         Draw();
 
@@ -71,6 +73,17 @@ Input Game::GetInput() {
     SetKeyState(Key::kQ, sf::Keyboard::Q);
 
     return input;
+}
+
+void Game::ProcessEvents() {
+    auto event = EventSystem::Instance().ConsumeEvent();
+    while (event != nullptr) {
+        auto player_attack_event = dynamic_cast<PlayerAttackEvent*>(event.get());
+        if (player_attack_event != nullptr) {
+            Handle(*player_attack_event);
+        }
+        event = EventSystem::Instance().ConsumeEvent();
+    }
 }
 
 void Game::Update(const Input& input) {
@@ -115,6 +128,24 @@ void Game::End() {
     window_.PrintTextCenter(msg2, 1);
 
     wgetch(window_.GetHandle());
+}
+
+void Game::Handle(const PlayerAttackEvent& event) {
+    const auto& attacker = event.attacker;
+    auto& target = event.target;
+
+    bool is_facing_right_direction =
+        (attacker.IsFacingRight() && attacker.GetX() < target.GetX()) ||
+        (!attacker.IsFacingRight() && attacker.GetX() > target.GetX());
+    bool is_target_in_range = abs(target.GetY() - attacker.GetY()) <= 1 &&
+                              abs(target.GetX() - attacker.GetX()) <=
+                                  (int32_t)(attacker.GetAttackRange() + attacker.GetWidth());
+
+    if (is_facing_right_direction && is_target_in_range) {
+        auto attacked_from =
+            attacker.GetX() < target.GetX() ? Player::Direction::kLeft : Player::Direction::kRight;
+        target.GotHit(event.damage, attacked_from);
+    }
 }
 
 Game::Answer Game::AskYesOrNo(const std::string& question) {

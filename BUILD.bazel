@@ -25,6 +25,7 @@ cc_library(
         "src/window.cc",
         "src/clip.cc",
         "src/input.cc",
+        "src/event_system.cc",
     ],
     hdrs = [
         "include/player.h",
@@ -35,6 +36,8 @@ cc_library(
         "include/clip.h",
         "include/config.h",
         "include/input.h",
+        "include/event.h",
+        "include/event_system.h",
     ],
     strip_include_prefix = "include",
     deps = [":sfml"],

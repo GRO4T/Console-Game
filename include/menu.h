@@ -12,7 +12,7 @@ using Choice = std::string;
 
 class Menu {
    public:
-    Menu(Window& window, const std::vector<Choice>& choices);  // NOLINT
+    Menu(Window& window, const std::vector<Choice>& choices);
 
     const Choice& GetChoice();
 

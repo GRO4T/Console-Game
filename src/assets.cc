@@ -66,8 +66,8 @@ Assets::Assets() {
 }
 
 Assets& Assets::Instance() {
-    static Assets assets;
-    return assets;
+    static Assets instance;
+    return instance;
 }
 
 PlayerAnimations& Assets::GetPlayerAnimations() { return player_animations_; }

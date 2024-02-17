@@ -25,19 +25,30 @@ class Player {
         Key right;
     };
 
+    enum class Direction { kRight, kLeft };
+
     Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
            int health, bool is_facing_right, const Controls &controls, const Map &map,
-           std::vector<std::vector<Clip>> &anims);  // NOLINT
+           std::vector<std::vector<Clip>> &anims);
 
+    int32_t GetX() const;
+    int32_t GetY() const;
+    uint32_t GetWidth() const;
     int32_t GetHealth() const;
+
+    bool IsFacingRight() const;
     bool IsDead() const;
+
+    uint32_t GetAttackRange() const;
 
     const std::vector<std::vector<Clip>> &GetAnimations() const;
     Clip *GetCurrentClip() const;
 
-    void Draw(Window &window);                          // NOLINT
-    void Update(const Input &input, Player &opponent);  // NOLINT
+    void Draw(Window &window);
+    void Update(const Input &input, Player &opponent);
     void Move(int32_t dx, int32_t dy);
+
+    void GotHit(uint32_t damage, const Direction &attacked_from);
 
    private:
     int32_t x_;  // NOTE: position is calculated from top-left corner.
@@ -65,9 +76,8 @@ class Player {
 
     std::pair<int32_t, int32_t> UpdateMovement(const Input &input);
     void UpdateCurrentClip();
-    void Attack(Player &opponent);  // NOLINT
-    void GotHit() { is_dead_ = --health_ <= 0; }
-    bool IsOpponentInAttackRange(Player &opponent);  // NOLINT
+    void Attack(Player &opponent);
+    bool IsOpponentInAttackRange(Player &opponent);
 };
 
 class PlayerFactory {
