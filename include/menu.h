@@ -1,10 +1,10 @@
 /* Copyright 2024 Damian Kolaska */
 #pragma once
 
-#include <ncurses.h>
-
 #include <string>
 #include <vector>
+
+#include "window.h"
 
 namespace ascii_combat {
 
@@ -12,12 +12,12 @@ using Choice = std::string;
 
 class Menu {
    public:
-    Menu(WINDOW* window, const std::vector<Choice>& choices);
+    Menu(Window& window, const std::vector<Choice>& choices);  // NOLINT
 
     const Choice& GetChoice();
 
    private:
-    WINDOW* window_;
+    Window& window_;
     std::vector<Choice> choices_;
     int highlighted_;
 

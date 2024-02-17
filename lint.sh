@@ -1,5 +1,6 @@
 #!/bin/bash
 # TODO(GRO4T): integrate linting directly into Bazel
+set -o errexit
 
 echo "============================== cpplint (headers) ============================="
 cpplint include/*.h

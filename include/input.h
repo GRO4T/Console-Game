@@ -7,7 +7,7 @@
 
 namespace ascii_combat {
 
-enum class Key { kW, kS, kA, kD, kUp, kDown, kLeft, kRight, kQ };
+enum class Key { kW, kS, kA, kD, kUp, kDown, kLeft, kRight, kQ, kEnter, kUnknown, kY, kN };
 
 enum class KeyState { kPressed, kReleased };
 

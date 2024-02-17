@@ -1,10 +1,10 @@
 /* Copyright 2024 Damian Kolaska */
 #pragma once
 
-#include <ncurses.h>
-
 #include <string>
 #include <vector>
+
+#include "window.h"
 
 namespace ascii_combat {
 
@@ -13,7 +13,7 @@ using Frame = std::vector<std::string>;
 class Clip {
    public:
     Clip(const std::vector<Frame>& frames, int32_t ticks_per_frame);
-    void Draw(WINDOW* win, int32_t y, int32_t x);
+    void Draw(Window& window, int32_t y, int32_t x);  // NOLINT
     void SetTimer(int32_t timer);
     bool IsFinished() const;
     const std::vector<Frame>& GetFrames() const;

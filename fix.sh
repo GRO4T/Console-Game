@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o errexit
+
 echo "======================== Clang Format ==================================="
 clang-format -i include/*.h src/*.cc
 

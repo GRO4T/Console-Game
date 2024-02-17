@@ -9,14 +9,14 @@ Clip::Clip(const std::vector<Frame>& frames, int32_t ticks_per_frame)
       timer_(ticks_per_frame),
       ticks_per_frame_(ticks_per_frame) {}
 
-void Clip::Draw(WINDOW* win, int32_t y, int32_t x) {
+void Clip::Draw(Window& window, int32_t y, int32_t x) {
     const auto& f = frames_[current_frame_];
 
     for (std::size_t row = 0; row < f.size(); ++row) {
         for (std::size_t col = 0; col < f[row].size(); ++col) {
             const char cell = f[row][col];
             if (cell != ' ') {
-                mvwprintw(win, y + row, x + col, "%c", cell);
+                window.PrintCell(cell, y + row, x + col);
             }
         }
     }

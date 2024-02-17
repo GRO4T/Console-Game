@@ -2,6 +2,7 @@
 #pragma once
 
 #include <chrono>  // NOLINT
+#include <string>
 #include <vector>
 
 #include "assets.h"
@@ -37,8 +38,6 @@ class Game {
     void End();
 
     Answer AskYesOrNo(const std::string& question);
-    static void DisplayTextCenter(Window& window, const std::string& text,  // NOLINT
-                                  int32_t offset_y = 0);
     void DisplayUI();
 };
 

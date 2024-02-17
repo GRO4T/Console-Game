@@ -23,10 +23,10 @@ int main() {
 
     std::string game_mode = "";
     do {
-        game_mode = Menu(window.GetHandle(), kGameModes).GetChoice();
+        game_mode = Menu(window, kGameModes).GetChoice();
 
         if ("MULTIPLAYER" == game_mode) {
-            std::string map_name = Menu(window.GetHandle(), kMapNames).GetChoice();
+            std::string map_name = Menu(window, kMapNames).GetChoice();
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
             auto map = Assets::Instance().GetMaps()[map_id];
@@ -34,8 +34,6 @@ int main() {
             game.GameLoop();
         }
     } while ("EXIT" != game_mode);
-
-    endwin();
 
     return 0;
 }

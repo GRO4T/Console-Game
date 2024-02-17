@@ -2,7 +2,6 @@
 #pragma once
 
 #include <math.h>
-#include <ncurses.h>
 
 #include <cassert>
 #include <iostream>
@@ -13,6 +12,7 @@
 #include "assets.h"
 #include "clip.h"
 #include "input.h"
+#include "window.h"
 
 namespace ascii_combat {
 
@@ -35,7 +35,7 @@ class Player {
     const std::vector<std::vector<Clip>> &GetAnimations() const;
     Clip *GetCurrentClip() const;
 
-    void Draw(WINDOW *win);
+    void Draw(Window &window);                          // NOLINT
     void Update(const Input &input, Player &opponent);  // NOLINT
     void Move(int32_t dx, int32_t dy);
 

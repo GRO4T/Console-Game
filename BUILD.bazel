@@ -37,7 +37,7 @@ cc_library(
         "include/input.h",
     ],
     strip_include_prefix = "include",
-    deps = [":sfml"]
+    deps = [":sfml"],
 )
 
 cc_binary(

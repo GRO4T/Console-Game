@@ -5,6 +5,9 @@
 
 namespace ascii_combat {
 
+// TODO(GRO4T): Create Box class to store x, y, width and height. Probably also
+// worth to create Vector class for velocity.
+// speed, jump_force, attack_range and health should be moved to a Player::Attributes class.
 Player::Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
                int health, bool is_facing_right, const Player::Controls& controls, const Map& map,
                std::vector<std::vector<Clip>>& anims)
@@ -37,14 +40,14 @@ Clip* Player::GetCurrentClip() const { return current_clip_; }
 
 bool Player::IsDead() const { return is_dead_; }
 
-void Player::Draw(WINDOW* win) {
+void Player::Draw(Window& window) {
     int draw_x = x_;
     bool is_current_clip_attack =
         current_clip_ == &animations_[3][0] || current_clip_ == &animations_[3][1];
     if (is_current_clip_attack && !is_facing_right_) {
         draw_x -= 4;
     }
-    current_clip_->Draw(win, y_, draw_x);
+    current_clip_->Draw(window, y_, draw_x);
 }
 
 void Player::Update(const Input& input, Player& opponent) {
@@ -68,6 +71,8 @@ void Player::Update(const Input& input, Player& opponent) {
 }
 
 void Player::Move(int32_t dx, int32_t dy) {
+    // TODO(GRO4T): refactor this
+    // TODO(GRO4T): take into account player's width when it collides with the right wall
     if (!is_dead_) {
         if (vy_ == 0 && dy != 0 && is_grounded_) {
             vy_ = dy;
@@ -234,6 +239,7 @@ void Player::Attack(Player& opponent) {
 }
 
 bool Player::IsOpponentInAttackRange(Player& opponent) {
+    // TODO(GRO4T): this should be checked by a Game class when Attack event is fired
     bool facing_right_direction_if_enemy_on_the_right = is_facing_right_ && x_ < opponent.x_;
     bool facing_right_direction_if_enemy_on_the_left = !is_facing_right_ && x_ > opponent.x_;
     if (facing_right_direction_if_enemy_on_the_right ||

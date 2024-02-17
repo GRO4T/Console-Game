@@ -74,25 +74,28 @@ Input Game::GetInput() {
 }
 
 void Game::Update(const Input& input) {
+    if (KeyState::kPressed == input.at(Key::kQ)) {
+        state_ = State::kPaused;
+    }
+
     players_[0].Update(input, players_[1]);
     players_[1].Update(input, players_[0]);
 }
 
 void Game::Draw() {
-    WINDOW* win = window_.GetHandle();
-    wclear(win);
+    window_.Clear();
+    window_.DrawWindowBorder();
     // Draw map
-    box(win, 0, 0);
-    for (std::size_t i = 0; i < map_.size(); ++i) {
-        mvwprintw(win, i, 1, "%s", map_[i].c_str());
+    for (std::size_t y = 0; y < map_.size(); ++y) {
+        window_.PrintRow(y, map_[y]);
     }
     // Draw players
     if (players_[1].IsDead()) {
-        players_[1].Draw(win);
-        players_[0].Draw(win);
+        players_[1].Draw(window_);
+        players_[0].Draw(window_);
     } else {
-        players_[0].Draw(win);
-        players_[1].Draw(win);
+        players_[0].Draw(window_);
+        players_[1].Draw(window_);
     }
     DisplayUI();
 }
@@ -108,45 +111,42 @@ void Game::End() {
     else if (players_[1].IsDead())
         msg1 = "Player1 won!";
 
-    DisplayTextCenter(window_, msg1);
-    DisplayTextCenter(window_, msg2, 1);
+    window_.PrintTextCenter(msg1);
+    window_.PrintTextCenter(msg2, 1);
 
     wgetch(window_.GetHandle());
 }
 
 Game::Answer Game::AskYesOrNo(const std::string& question) {
-    DisplayTextCenter(window_, question);
+    window_.PrintTextCenter(question);
     while (true) {
-        char c = wgetch(window_.GetHandle());
-        if (c == 'y' || c == 'Y') {
+        Key key = window_.GetKey();
+        if (Key::kY == key) {
             return Answer::kYes;
-        } else if (c == 'n' || c == 'N') {
+        } else if (Key::kN == key) {
             return Answer::kNo;
         }
     }
 }
 
-void Game::DisplayTextCenter(Window& window, const std::string& text, int32_t offset_y) {
-    mvwprintw(window.GetHandle(), window.GetHeight() / 2 + offset_y,
-              (window.GetWidth() - text.length()) / 2, text.c_str());
-}
-
 void Game::DisplayUI() {
-    const auto player1_health = players_[0].GetHealth();
-    const auto player2_health = players_[1].GetHealth();
+    std::string player1_name = "Player1";
+    std::string player2_name = "Player2";
+    auto player1_health = players_[0].GetHealth();
+    auto player2_health = players_[1].GetHealth();
 
-    std::string health_bar1 =
+    std::string player1_health_text =
         "health = " + std::to_string(player1_health >= 0 ? player1_health : 0);
-    std::string health_bar2 =
+    std::string player2_health_text =
         "health = " + std::to_string(player2_health >= 0 ? player2_health : 0);
 
-    wattron(window_.GetHandle(), A_REVERSE);
-    mvwprintw(window_.GetHandle(), 1, 1, "Player1");
-    mvwprintw(window_.GetHandle(), 1, window_.GetWidth() - 7, "Player2");
-    wattroff(window_.GetHandle(), A_REVERSE);
-    mvwprintw(window_.GetHandle(), 2, 1, health_bar1.c_str());
-    mvwprintw(window_.GetHandle(), 2, window_.GetWidth() - health_bar2.length(),
-              health_bar2.c_str());
+    window_.PrintText(player1_name, 0, 0);
+    window_.PrintText(player1_health_text, 1, 0);
+
+    auto player2_stats_draw_x =
+        window_.GetWidth() - std::max(player2_name.length(), player2_health_text.length()) - 1;
+    window_.PrintText(player2_name, 0, player2_stats_draw_x);
+    window_.PrintText(player2_health_text, 1, player2_stats_draw_x);
 }
 
 }  // namespace ascii_combat
