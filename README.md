@@ -40,10 +40,10 @@ You will be welcomed with this simple menu.
 
 ![Game's menu](docs/menu.png)
 
-> **_NOTE:_**  SINGLEPLAYER mode is not currently implemented.
+> **_NOTE:_**  Only *Local Multiplayer* mode is currently implemented.
 
-### Multiplayer mode
-In multiplayer mode players play using the same keyboard. *Player1* (on the left) is using WSAD keys. *Player2* controls the character with arrows.
+### Local Multiplayer mode
+In local multiplayer mode players play using the same keyboard. *Player1* (on the left) is using WSAD keys. *Player2* controls the character with arrows.
 
 Controls:
 * up: jump;
@@ -51,7 +51,7 @@ Controls:
 * left: go left;
 * right: go right;
 
-![Multiplayer game mode](docs/game_view.png)
+![Local Multiplayer game mode](docs/game_view.png)
 
 At any time you can pause/exit the game by pressing `q`.
 
