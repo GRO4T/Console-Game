@@ -20,37 +20,6 @@ filegroup(
 )
 """
 
-# allegro source code repository
-# http_archive(
-#     name = "allegro",
-#     build_file_content = _ALL_CONTENT,
-#     strip_prefix = "allegro-5.2.9.1",
-#     urls = [
-#         "https://github.com/liballeg/allegro5/releases/download/5.2.9.1/allegro-5.2.9.1.tar.gz"
-#     ],
-#     # sha256 = "0b8e7465dc5e98c757cc3650a20a7843ee4c3edf50aaf60bb33fd879690d2c73",
-# )
-
-# http_archive(
-#     name = "sdl",
-#     build_file_content = _ALL_CONTENT,
-#     strip_prefix = "SDL2-2.30.0",
-#     urls = [
-#         "https://github.com/libsdl-org/SDL/releases/download/release-2.30.0/SDL2-2.30.0.tar.gz"
-#     ],
-#     # sha256 = "0b8e7465dc5e98c757cc3650a20a7843ee4c3edf50aaf60bb33fd879690d2c73",
-# )
-
-# http_archive(
-#     name = "gainput",
-#     build_file_content = _ALL_CONTENT,
-#     strip_prefix = "gainput-1.0.0",
-#     urls = [
-#         "https://github.com/jkuhlmann/gainput/archive/refs/tags/v1.0.0.tar.gz"
-#     ],
-#     # sha256 = "0b8e7465dc5e98c757cc3650a20a7843ee4c3edf50aaf60bb33fd879690d2c73",
-# )
-
 http_archive(
     name = "sfml",
     build_file_content = _ALL_CONTENT,
