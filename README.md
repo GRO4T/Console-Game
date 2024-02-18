@@ -100,6 +100,7 @@ Parsing finishes when EOF is found
 * Modernize the code.
 * Test and refactor assets module.
 * Add more weapons.
+* Allow the game to run at 60fps (floating point arithmetic).
 
 ### Big
 * Implement networking based on Protobufs.
