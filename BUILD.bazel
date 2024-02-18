@@ -24,7 +24,6 @@ cc_library(
         "src/assets.cc",
         "src/window.cc",
         "src/clip.cc",
-        "src/input.cc",
         "src/event_system.cc",
     ],
     hdrs = [
