@@ -13,8 +13,6 @@
 #include "window.h"
 
 // TODO(GRO4T): This should be read from the assets file.
-const std::vector<std::string> kGameModes = {"(WIP) Player vs AI", "Local Multiplayer",
-                                             "(WIP) Multiplayer", "Exit"};
 const std::vector<std::string> kMapNames = {"Plain Flat", "Hills", "Valley", "Platformer"};
 
 using namespace ascii_combat;  // NOLINT
@@ -24,9 +22,10 @@ int main() {
 
     std::string game_mode = "";
     do {
-        game_mode = Menu(window, kGameModes).GetChoice();
+        game_mode = Menu(window, {kPlayerVsAIMode, kLocalMultiplayerMode, kMultiplayerMode, kExit})
+                        .GetChoice();
 
-        if ("Local Multiplayer" == game_mode) {
+        if (kLocalMultiplayerMode == game_mode) {
             std::string map_name = Menu(window, kMapNames).GetChoice();
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
@@ -34,7 +33,7 @@ int main() {
             Game game(window, map);
             game.Run();
         }
-    } while ("Exit" != game_mode);
+    } while (kExit != game_mode);
 
     return 0;
 }

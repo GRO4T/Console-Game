@@ -16,6 +16,11 @@ constexpr int32_t kWindowTopLeftY = 0;
 
 const char* kAssetsFileName = "assets.txt";
 
+const char* kPlayerVsAIMode = "(WIP) Player vs AI";
+const char* kLocalMultiplayerMode = "Local Multiplayer";
+const char* kMultiplayerMode = "(WIP) Multiplayer";
+const char* kExit = "Exit";
+
 constexpr Player::Controls kControlsPlayer1{Key::kW, Key::kS, Key::kA, Key::kD};
 constexpr Player::Controls kControlsPlayer2{Key::kUp, Key::kDown, Key::kLeft, Key::kRight};
 
