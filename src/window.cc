@@ -17,6 +17,8 @@ Window::Window(uint32_t height, uint32_t width, int32_t top_left_x, int32_t top_
     keypad(handle_, true);   // enable special characters
 }
 
+Window::~Window() { endwin(); }
+
 void Window::Clear() { wclear(handle_); }
 
 void Window::Refresh() { wrefresh(handle_); }

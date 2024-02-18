@@ -14,6 +14,7 @@ class Window {
    public:
     Window(uint32_t height, uint32_t width, int32_t top_left_x, int32_t top_left_y,
            uint32_t padding);
+    ~Window();
 
     WINDOW* GetHandle();
     void Clear();
