@@ -38,6 +38,7 @@ cc_library(
         "include/input.h",
         "include/event.h",
         "include/event_system.h",
+        "include/utils.h",
     ],
     strip_include_prefix = "include",
     deps = [":sfml"],

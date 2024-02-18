@@ -21,6 +21,8 @@ constexpr Player::Controls kControlsPlayer2{Key::kUp, Key::kDown, Key::kLeft, Ke
 
 constexpr uint32_t kPlayerWidth = 3;
 constexpr uint32_t kPlayerHeight = 4;
+constexpr uint32_t kPlayerSpeed = 3;
+constexpr uint32_t kPlayerJumpForce = 3;
 constexpr uint32_t kPlayerAttackRange = 3;
 constexpr uint32_t kPlayerHealth = 3;
 

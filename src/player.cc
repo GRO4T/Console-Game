@@ -7,28 +7,25 @@
 
 namespace ascii_combat {
 
-// TODO(GRO4T): Create Box class to store x, y, width and height. Probably also
-// worth to create Vector class for velocity.
-// speed, jump_force, attack_range and health should be moved to a Player::Attributes class.
-Player::Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
-               int health, bool is_facing_right, const Player::Controls& controls, const Map& map,
-               std::vector<std::vector<Clip>>& anims)
-    : x_(x),
-      y_(y),
+// TODO(GRO4T): Move position and velocity to Vector2D.
+Player::Player(const Box& box, const Attributes& attrs, const Direction& facing_direction,
+               const Player::Controls& controls, const Map& map)
+    : x_(box.x),
+      y_(box.y),
       vx_(0),
       vy_(0),
-      width_(width),
-      height_(height),
-      speed_(speed),
-      jump_force_(jump_force),
-      health_(health),
-      is_facing_right_(is_facing_right),
+      width_(box.width),
+      height_(box.height),
+      speed_(attrs.speed),
+      jump_force_(attrs.jump_force),
+      attack_range_(attrs.attack_range),
+      health_(attrs.health),
+      facing_direction_(facing_direction),
       is_attacking_(false),
       is_dead_(false),
-      attack_range_(attack_range),
       controls_(controls),
       map_(map) {
-    for (auto anim : anims) {
+    for (auto anim : Assets::Instance().GetPlayerAnimations()) {
         animations_.emplace_back(anim);
     }
     current_clip_ = &animations_[0][0];
@@ -46,7 +43,7 @@ uint32_t Player::GetWidth() const { return width_; }
 
 int32_t Player::GetHealth() const { return health_; }
 
-bool Player::IsFacingRight() const { return is_facing_right_; }
+const Player::Direction& Player::GetFacingDirection() const { return facing_direction_; }
 
 bool Player::IsDead() const { return health_ <= 0; }
 
@@ -56,7 +53,7 @@ void Player::Draw(Window& window) {
     int draw_x = x_;
     bool is_current_clip_attack =
         current_clip_ == &animations_[3][0] || current_clip_ == &animations_[3][1];
-    if (is_current_clip_attack && !is_facing_right_) {
+    if (is_current_clip_attack && Direction::kLeft == facing_direction_) {
         draw_x -= 4;
     }
     current_clip_->Draw(window, y_, draw_x);
@@ -219,10 +216,10 @@ std::pair<int32_t, int32_t> Player::UpdateMovement(const Input& input) {
         dy -= jump_force_;
     } else if (is_left_pressed && !is_attacking_) {
         dx -= speed_;
-        is_facing_right_ = false;
+        facing_direction_ = Direction::kLeft;
     } else if (is_right_pressed && !is_attacking_) {
         dx += speed_;
-        is_facing_right_ = true;
+        facing_direction_ = Direction::kRight;
     }
 
     return {dx, dy};
@@ -230,13 +227,13 @@ std::pair<int32_t, int32_t> Player::UpdateMovement(const Input& input) {
 
 void Player::UpdateCurrentClip() {
     if (is_attacking_) {
-        if (is_facing_right_) {
+        if (Direction::kRight == facing_direction_) {
             current_clip_ = &animations_[3][0];
         } else {
             current_clip_ = &animations_[3][1];
         }
     } else if (is_grounded_ && vx_ != 0) {
-        if (is_facing_right_) {
+        if (Direction::kRight == facing_direction_) {
             current_clip_ = &animations_[1][0];
         } else {
             current_clip_ = &animations_[1][1];
@@ -248,10 +245,11 @@ void Player::UpdateCurrentClip() {
     }
 }
 
-Player PlayerFactory::CreatePlayer(int x, int y, bool is_facing_right,
+Player PlayerFactory::CreatePlayer(int32_t x, int32_t y, const Player::Direction& facing_direction,
                                    const Player::Controls& controls, const Map& map) {
-    return Player(x, y, kPlayerWidth, kPlayerHeight, 3, 3, kPlayerAttackRange, kPlayerHealth,
-                  is_facing_right, controls, map, Assets::Instance().GetPlayerAnimations());
+    Box box{x, y, kPlayerWidth, kPlayerHeight};
+    Player::Attributes attrs{kPlayerSpeed, kPlayerJumpForce, kPlayerAttackRange, kPlayerHealth};
+    return Player(box, attrs, facing_direction, controls, map);
 }
 
 }  // namespace ascii_combat

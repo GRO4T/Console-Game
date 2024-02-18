@@ -12,15 +12,15 @@ using namespace std::chrono_literals;  // NOLINT
 
 namespace ascii_combat {
 
-Game::Game(Window& window, const std::vector<std::string>& map,
-           const std::vector<Player::Controls>& player_controls_list)
+Game::Game(Window& window, const std::vector<std::string>& map)
     : window_(window),
       state_(State::kRunning),
       map_(map),
-      players_({PlayerFactory::CreatePlayer(0, 0, true, player_controls_list[0], map),
-                PlayerFactory::CreatePlayer(76, 0, false, player_controls_list[1], map)}) {}
+      players_(
+          {PlayerFactory::CreatePlayer(0, 0, Player::Direction::kRight, kControlsPlayer1, map),
+           PlayerFactory::CreatePlayer(76, 0, Player::Direction::kLeft, kControlsPlayer2, map)}) {}
 
-void Game::GameLoop() {
+void Game::Run() {
     while (true) {
         const auto start = std::chrono::system_clock::now();
 
@@ -134,9 +134,10 @@ void Game::Handle(const PlayerAttackEvent& event) {
     const auto& attacker = event.attacker;
     auto& target = event.target;
 
-    bool is_facing_right_direction =
-        (attacker.IsFacingRight() && attacker.GetX() < target.GetX()) ||
-        (!attacker.IsFacingRight() && attacker.GetX() > target.GetX());
+    bool is_facing_right_direction = (Player::Direction::kRight == attacker.GetFacingDirection() &&
+                                      attacker.GetX() < target.GetX()) ||
+                                     (Player::Direction::kLeft == attacker.GetFacingDirection() &&
+                                      attacker.GetX() > target.GetX());
     bool is_target_in_range = abs(target.GetY() - attacker.GetY()) <= 1 &&
                               abs(target.GetX() - attacker.GetX()) <=
                                   (int32_t)(attacker.GetAttackRange() + attacker.GetWidth());

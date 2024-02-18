@@ -1,9 +1,9 @@
-build:gcc --cxxopt=-std=c++20
-build:gcc --cxxopt=-Wall
-build:gcc --cxxopt=-Werror
-build:gcc --cxxopt=-Wextra
+build:linux --cxxopt=-std=c++20
+build:linux --cxxopt=-Wall
+build:linux --cxxopt=-Werror
+build:linux --cxxopt=-Wextra
 
-build:clang --cxxopt=-std=c++20
-build:clang --cxxopt=-Wall
-# build:clang --cxxopt=-Werror
-build:clang --cxxopt=-Wextra
+build:macOS --cxxopt=-std=c++20
+build:macOS --cxxopt=-Wall
+build:macOS --cxxopt=-Werror
+build:macOS --cxxopt=-Wextra

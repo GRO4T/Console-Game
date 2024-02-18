@@ -13,7 +13,7 @@ using Frame = std::vector<std::string>;
 class Clip {
    public:
     Clip(const std::vector<Frame>& frames, int32_t ticks_per_frame);
-    void Draw(Window& window, int32_t y, int32_t x);  // NOLINT
+    void Draw(Window& window, int32_t y, int32_t x);
     void SetTimer(int32_t timer);
     bool IsFinished() const;
     const std::vector<Frame>& GetFrames() const;

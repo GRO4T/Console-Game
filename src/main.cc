@@ -30,8 +30,8 @@ int main() {
             std::size_t map_id =
                 std::find(kMapNames.begin(), kMapNames.end(), map_name) - kMapNames.begin();
             auto map = Assets::Instance().GetMaps()[map_id];
-            Game game(window, map, {kControlsPlayer1, kControlsPlayer2});
-            game.GameLoop();
+            Game game(window, map);
+            game.Run();
         }
     } while ("EXIT" != game_mode);
 

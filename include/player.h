@@ -12,6 +12,7 @@
 #include "assets.h"
 #include "clip.h"
 #include "input.h"
+#include "utils.h"
 #include "window.h"
 
 namespace ascii_combat {
@@ -25,18 +26,24 @@ class Player {
         Key right;
     };
 
+    struct Attributes {
+        uint32_t speed;
+        uint32_t jump_force;
+        uint32_t attack_range;
+        uint32_t health;
+    };
+
     enum class Direction { kRight, kLeft };
 
-    Player(int x, int y, int width, int height, int speed, int jump_force, int attack_range,
-           int health, bool is_facing_right, const Controls &controls, const Map &map,
-           std::vector<std::vector<Clip>> &anims);
+    Player(const Box &box, const Attributes &attrs, const Direction &facing_direction,
+           const Controls &controls, const Map &map);
 
     int32_t GetX() const;
     int32_t GetY() const;
     uint32_t GetWidth() const;
     int32_t GetHealth() const;
 
-    bool IsFacingRight() const;
+    const Direction &GetFacingDirection() const;
     bool IsDead() const;
 
     uint32_t GetAttackRange() const;
@@ -55,18 +62,18 @@ class Player {
     int32_t y_;
     int32_t vx_;
     int32_t vy_;
-    uint32_t width_;
-    uint32_t height_;
-    int32_t speed_;
-    int32_t jump_force_;
+
+    const uint32_t width_;
+    const uint32_t height_;
+    const int32_t speed_;
+    const int32_t jump_force_;
+    const uint32_t attack_range_;
 
     int32_t health_;
+    Direction facing_direction_;
     bool is_grounded_;
-    bool is_facing_right_;
     bool is_attacking_;
     bool is_dead_;
-
-    uint32_t attack_range_;
 
     const Controls controls_;
     const Map map_;
@@ -76,14 +83,12 @@ class Player {
 
     std::pair<int32_t, int32_t> UpdateMovement(const Input &input);
     void UpdateCurrentClip();
-    void Attack(Player &opponent);
-    bool IsOpponentInAttackRange(Player &opponent);
 };
 
 class PlayerFactory {
    public:
-    static Player CreatePlayer(int x, int y, bool is_facing_right, const Player::Controls &controls,
-                               const Map &map);
+    static Player CreatePlayer(int32_t x, int32_t y, const Player::Direction &facing_direction,
+                               const Player::Controls &controls, const Map &map);
 };
 
 }  // namespace ascii_combat

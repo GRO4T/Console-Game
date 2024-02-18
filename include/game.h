@@ -20,9 +20,8 @@ namespace ascii_combat {
 
 class Game {
    public:
-    Game(Window& window, const std::vector<std::string>& map,
-         const std::vector<Player::Controls>& player_controls_list);
-    void GameLoop();
+    Game(Window& window, const std::vector<std::string>& map);
+    void Run();
 
    private:
     enum class State { kRunning, kPaused, kExit };
