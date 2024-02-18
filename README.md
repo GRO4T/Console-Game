@@ -14,21 +14,21 @@ for Bazel CLI.
 ### Linux
 Release
 ```
-./build.sh gcc opt
+./build.sh linux opt
 ```
 Debug
 ```
-./build.sh gcc dbg
+./build.sh linux dbg
 ```
 
 ### Mac OS
 Release
 ```
-./build.sh clang opt
+./build.sh macOS opt
 ```
 Debug
 ```
-./build.sh clang dbg
+./build.sh macOS dbg
 ```
 
 ## How to run
@@ -90,27 +90,14 @@ For Player: (read animations)
 
 Parsing finishes when EOF is found
 
-## Troubleshooting
-### macOS disallows loading of dynamic libraries
-Remove quarantine for following files:
-* libsfml-system.2.6.dylib
-* libsfml-system.2.6.1.dylib
-* libsfml-window.2.6.dylib
-* libsfml-window.2.6.1.dylib
-```
-sudo xattr -d com.apple.quarantine <file>
-```
-
 ## TODOs
 ### Small
 * Use Bazel's `select` to differentiate between platform.
-* Rename targets to <os>-<compiler>-<arch>, e.g. macOS-clang-arm64, linux-gcc-x86.
 
 ### Medium
 * Create a CI.
 * Add GTest.
 * Modernize the code.
-* Implement simple event system.
 * Test and refactor assets module.
 * Add more weapons.
 
