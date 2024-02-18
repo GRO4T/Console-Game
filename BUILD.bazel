@@ -15,37 +15,9 @@ cmake(
     ],
 )
 
-cc_library(
-    name = "ascii-combat-lib",
-    srcs = [
-        "src/player.cc",
-        "src/game.cc",
-        "src/menu.cc",
-        "src/assets.cc",
-        "src/window.cc",
-        "src/clip.cc",
-        "src/event_system.cc",
-    ],
-    hdrs = [
-        "include/player.h",
-        "include/game.h",
-        "include/menu.h",
-        "include/assets.h",
-        "include/window.h",
-        "include/clip.h",
-        "include/config.h",
-        "include/input.h",
-        "include/event.h",
-        "include/event_system.h",
-        "include/utils.h",
-    ],
-    strip_include_prefix = "include",
-    deps = [":sfml"],
-)
-
 cc_binary(
     name = "ascii-combat",
-    srcs = ["src/main.cc"],
-    deps = [":ascii-combat-lib"],
+    srcs = glob(["src/*.cc"]) + glob(["src/*.h"]),
+    deps = [":sfml"],
     linkopts = ["-lcurses"],
 )

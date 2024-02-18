@@ -14,12 +14,12 @@ constexpr uint32_t kWindowPadding = 2;
 constexpr int32_t kWindowTopLeftX = 0;
 constexpr int32_t kWindowTopLeftY = 0;
 
-const char* kAssetsFileName = "assets.txt";
+const char* const kAssetsFileName = "assets.txt";
 
-const char* kPlayerVsAIMode = "(WIP) Player vs AI";
-const char* kLocalMultiplayerMode = "Local Multiplayer";
-const char* kMultiplayerMode = "(WIP) Multiplayer";
-const char* kExit = "Exit";
+const char* const kPlayerVsAIMode = "(WIP) Player vs AI";
+const char* const kLocalMultiplayerMode = "Local Multiplayer";
+const char* const kMultiplayerMode = "(WIP) Multiplayer";
+const char* const kExit = "Exit";
 
 constexpr Player::Controls kControlsPlayer1{Key::kW, Key::kS, Key::kA, Key::kD};
 constexpr Player::Controls kControlsPlayer2{Key::kUp, Key::kDown, Key::kLeft, Key::kRight};
