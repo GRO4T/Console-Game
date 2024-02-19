@@ -14,21 +14,21 @@ for Bazel CLI.
 ### Linux
 Release
 ```
-./build.sh linux opt
+./build.sh linux release
 ```
 Debug
 ```
-./build.sh linux dbg
+./build.sh linux debug
 ```
 
 ### Mac OS
 Release
 ```
-./build.sh macOS opt
+./build.sh macOS release
 ```
 Debug
 ```
-./build.sh macOS dbg
+./build.sh macOS debug
 ```
 
 ## How to run
