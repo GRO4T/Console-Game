@@ -10,3 +10,6 @@ MODULE.bazel.lock
 .vscode/settings.json
 .vscode/c_cpp_properties.json
 
+# Protobuf generated files
+src/*pb.cc
+src/*pb.h

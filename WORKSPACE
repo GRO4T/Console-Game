@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "rules_foreign_cc",
     sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
@@ -12,21 +13,14 @@ load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_depende
 # https://bazelbuild.github.io/rules_foreign_cc/0.10.1/flatten.html#rules_foreign_cc_dependencies
 rules_foreign_cc_dependencies()
 
-_ALL_CONTENT = """\
-filegroup(
-    name = "all_srcs",
-    srcs = glob(["**"]),
-    visibility = ["//visibility:public"],
-)
-"""
+all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
 
 http_archive(
     name = "sfml",
-    build_file_content = _ALL_CONTENT,
+    build_file_content = all_content,
     strip_prefix = "SFML-2.6.1",
     urls = [
-        "https://github.com/SFML/SFML/archive/refs/tags/2.6.1.zip"
+        "https://github.com/SFML/SFML/archive/refs/tags/2.6.1.zip",
     ],
     # sha256 = "0b8e7465dc5e98c757cc3650a20a7843ee4c3edf50aaf60bb33fd879690d2c73",
 )
-

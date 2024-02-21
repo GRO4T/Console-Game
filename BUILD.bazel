@@ -1,23 +1,52 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_import")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 
+config_setting(
+    name = "debug_build",
+    values = {
+        "compilation_mode": "dbg",
+    },
+)
 
 cmake(
     name = "sfml",
-    lib_source = "@sfml//:all_srcs",
-    out_shared_libs = [
-        "libsfml-system.2.6.1.dylib",
-        "libsfml-system.2.6.dylib",
-        "libsfml-system.dylib",
-        "libsfml-window.2.6.1.dylib",
-        "libsfml-window.2.6.dylib",
-        "libsfml-window.dylib",
+    copts = [
+        "-Wno-fuse-ld-path",
     ],
+    lib_source = "@sfml//:all",
+    out_shared_libs = select({
+        ":debug_build": [
+            "libsfml-system-d.2.6.1.dylib",
+            "libsfml-system-d.2.6.dylib",
+            "libsfml-system-d.dylib",
+            "libsfml-window-d.2.6.1.dylib",
+            "libsfml-window-d.2.6.dylib",
+            "libsfml-window-d.dylib",
+        ],
+        "//conditions:default": [
+            "libsfml-system.2.6.1.dylib",
+            "libsfml-system.2.6.dylib",
+            "libsfml-system.dylib",
+            "libsfml-window.2.6.1.dylib",
+            "libsfml-window.2.6.dylib",
+            "libsfml-window.dylib",
+        ],
+    }),
+)
+
+cc_library(
+    name = "asio",
+    hdrs = glob(["extern/asio/asio/include/**/*.hpp"]) + glob(["extern/asio/asio/include/**/*.ipp"]),
+    includes = ["extern/asio/asio/include"],
 )
 
 cc_binary(
     name = "ascii-combat",
     srcs = glob(["src/*.cc"]) + glob(["src/*.h"]),
-    deps = [":sfml"],
     linkopts = ["-lcurses"],
+    deps = [
+        # ":boost_asio",
+        ":asio",
+        ":sfml",
+    ],
 )

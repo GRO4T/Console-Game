@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package ascii_combat_proto;
+
+message PlayerControls {
+    bool jump = 1; 
+    bool attack = 2; 
+    bool left = 3; 
+    bool right = 4; 
+}
